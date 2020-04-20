@@ -1,0 +1,60 @@
+\part{Dátové modelovanie a Garantovaný odhad parametrov}
+\chapter{Dátové modelovanie}
+V dnešnom svete sme doslova obklopený množstvom dát, ktoré vychádzajú z rôznych zariadení. Tieto dáta sa dajú použiť rôzne -- štúdium procesov (Čo sa stalo v danom okamihu ?), predikcia udalostí (Čo sa môže stať ?), a aj reakcia na ne (Čo môžeme spraviť ?). Týmito otázkami sa zaoberá dátové modelovanie. Vo všeobecnosti by sa dalo povedať, že úlohou dátového modelovania je nájsť vzorec medzi závislou (vstupnou) a nezávislou (výstupnou) premennou, ktorý je skrytý v súbore dát, ale na rozdiel od regresných metód, dátové modelovanie extrahuje model z údajov bez akýchkoľvek predpokladov na funkčnosť \cite{mishra:data_modeling:2018}.
+
+Výhodou dátového modelovania, v porovnaní s obyčajnou regresnou analýzou je, že dokáže identifikovať skryté vzťahy v dátach, obchádza nutnosť explicitne definovať funkčné formy pre vstupno-výstupný vzťah, má možnosť ladenia modelu počas "učenia". Avšak určitá miera interpretovateľnosti modelu sa môže stratiť z dôvodu zložitosti modelu -- takéto modely označujeme ako "black box" alebo "čierna skrinka" \cite{mishra:data_modeling:2018}.
+
+\section{Dátové modely}
+V tejto časti si uvedieme niektoré základné formulácie modelov lineárnych dynamických systémov v diskrétnom čase, ktoré sa najčastejšie používajú pri identifikácii nameraných údajov. Najskôr je však nutné zaviesť pojem ARMA proces, na základe ktorého môžeme vyjadriť ľubovoľný stacionárny náhodný signál ako biely šum prechádzajúci lineárnym systémom \cite{fikar:identifikacia:1999}.
+
+\textbf{ARMA proces} 
+\newline
+Uvažujme stacionárny proces $v(t)$, ktorý môže byť reprezentovaný ako biely šum prechádzajúci lineárnym systémom v tvare 
+\begin{equation}
+	v(t) = F(q)e(t),
+\end{equation}
+kde $q$ je operátor posunutia a $F(q)$ je racionálna lomená funkcia v tvare 
+\begin{equation}
+	F(q) = \frac{C(q)}{A(q)} = \frac{1 + \sum_{i=1}^{n_c} c_{i}q^{-i}}{1 + \sum_{i=1}^{n_a} a_{i}q^{-i}},
+\end{equation}
+kde $n_c$ resp. $n_a$ predstavuje rád čitateľa resp. rád menovateľa. Pri takejto formulácii, ARMA proces vyzerá nasledovne 
+\begin{equation}
+	\begin{split}
+			v(t) = &-a_{1}v(t-1) - \dots -a_{n_a}v(t-n_a) + \\
+				   &+e(t) + c_1e(t-1) + \dots + c_{n_c}e(t-n_c).
+	\end{split} 
+\end{equation}
+Skladá sa z dvoch častí -- AR (autoregressive), keď $n_c = 0$
+\begin{equation}
+	v(t) + a_{1}v(t-1) + \dots + a_{n_a}v(t-n_a) = e(t)
+\end{equation}
+a z časti MA (moving average), keď $n_a = 0$
+\begin{equation}
+	v(t) = e(t) + c_1e(t-1) + \dots + c_{n_c}e(t-n_c).
+\end{equation}
+Zatiaľ čo AR sa venuje regresnej časti, zložka MA modeluje vplyv poruchovej veličiny.
+ 
+\textbf{ARX model}
+\newline
+ ARX (Autoregressive with eXogenous variable) model predpokladá, že skutočný dynamický systém je popísaný diferenčnou rovnicou v tvare
+ \begin{equation}
+ 	y(t) = \frac{B(q)}{A(q)}u(t) = \frac{\sum_{i=1}^{n_b} b_{i}q^{-i}}{\sum_{i=1}^{n_a} a_{i}q^{-i}}u(t),
+ \end{equation}
+ čo môžeme prepísať do tvaru 
+ \begin{equation}
+	 \begin{split}
+		 y(t) = &- a_{1}y(t-1) - \dots - a_{n_a}y(t-n_a) + \\
+		 		&+ b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b) \left(+ e(t)\right), 
+	 \end{split} 
+ \end{equation}
+ pričom ARX model predpokladá, že chyba vstupuje do rovnice systému v podobe bieleho šumu.
+ 
+ \textbf{FIR model}
+ \newline
+ FIR (Finite Impulse Response) je špeciálny prípad ARX modelu práve tedy, ak rád menovateľa $n_a = 0$. Takýto model je závislý iba od vstupov a môžeme ho opísať diferenčnou rovnicou v tvare
+ \begin{equation}
+ 	\begin{split}
+ 		y(t) &= B(q)u(t) = \sum_{i=1}^{n_b} b_{i}q^{-i}u(t) = \\
+ 			 &= b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b).
+ 	\end{split}
+ \end{equation}

@@ -1,5 +1,9 @@
-\chapter{Úvod}
-\label{ch:intro}
+\chapter*{Úvod}
+\addcontentsline{toc}{chapter}{Úvod}
+V tomto momente, ako čítate tento text, prebieha okolo nás množstvo procesov, ktoré zabezpečujú fungovanie dnešnej spoločnosti bez toho, aby si to človek vôbec uvedomoval a ťažko povedať, či si ešte dokážeme predstaviť život bez týchto vymožeností. O čom je reč ? Distribúcia elektrickej energie, pitnej vody, plynu, separácia odpadu či čistenie odpadových vôd alebo každodenný prísun potravín, liečiv, pohonných hmôt, oblečenia atď. Asi je zrejmé, že takto by sme mohli pokračovať ešte veľmi dlho. Čo sa však snažíme ozrejmiť je, že väčšina týchto procesov je nejakým spôsobom automatizovaná, čo nám umožňuje vykonávať daný proces efektívne, kvalitne a hlavne bezpečne. 
 
+Základným kameňom väčšiny pokročilejších metód automatizácie je matematický model zariadenia. V princípe existujú dva prístupy k matematickému modelovaniu. Prvý prístup je založený na fyzikálnych zákonoch, ktorý vedie k tak zvaným mechanickým modelom. Problémom takéhoto modelovania je, že s rastúcimi požiadavkami na kvantitu, kvalitu, bezpečnosť alebo efektivitu, rastie aj zložitosť priemyselných procesov -- jednak štruktúra zariadenia a jednak stupeň automatizácie, čo vedie ku komplikáciám. Nehovoriac o tom, že takýto prístup je časovo a aj finančne veľmi náročný. Druhý prístup vychádza z analýzy a identifikácie veľkého množstva nameraných procesných údajov, čo vedie k dátovým modelom. Dátové modely sú jednoduchšie na konštrukciu, avšak môžu so sebou prinášať neistoty v podobe nesprávnej štruktúry modelu alebo parametrov.
 
-Example of citing literature~\cite{boyd:book:2009:cvx}.
+Tu sa naskytá otázka, či by nebolo možné opísať komplikované zariadenie jednoduchším mechanickým modelom a vzniknuté rozdiely od skutočného zariadenia doplniť dátovými modelmi. Ako bolo ukázané vo viacerých vedeckých publikáciach, takéto hybridné modely je možné skonštruovať a využiť ich v rôznych oblastiach automatizácie \cite{hamilton:hybrid_modeling:2017}--\cite{hernandez:economics_opt_w_mismatch:2019}. Výhodou hybridných modelov je väčšia robustnosť a krátkodobá predikcia, najmä v situáciách, kde je veľká neistota v parametroch modelu \cite{hamilton:hybrid_modeling:2017}.
+
+Hlavným predmetom tejto práce je ukázať ako možno skonštruovať hybridný model využitím metódy garantovaného odhadu parametrov a aplikovať ho pri ekonomickej optimalizácie dynamického procesu prietokového biochemického reaktora.
