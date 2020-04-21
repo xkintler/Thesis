@@ -1,8 +1,8 @@
 \part{Dátové modelovanie a Garantovaný odhad parametrov}
 \chapter{Dátové modelovanie}
-V dnešnom svete sme doslova obklopený množstvom dát, ktoré vychádzajú z rôznych zariadení. Tieto dáta sa dajú použiť rôzne -- štúdium procesov (Čo sa stalo v danom okamihu ?), predikcia udalostí (Čo sa môže stať ?), a aj reakcia na ne (Čo môžeme spraviť ?). Týmito otázkami sa zaoberá dátové modelovanie. Vo všeobecnosti by sa dalo povedať, že úlohou dátového modelovania je nájsť vzorec medzi závislou (vstupnou) a nezávislou (výstupnou) premennou, ktorý je skrytý v súbore dát, ale na rozdiel od regresných metód, dátové modelovanie extrahuje model z údajov bez akýchkoľvek predpokladov na funkčnosť \cite{mishra:data_modeling:2018}.
+%V dnešnom svete sme doslova obklopený množstvom dát, ktoré vychádzajú z rôznych zariadení. Tieto dáta sa dajú použiť rôzne -- štúdium procesov (Čo sa stalo v danom okamihu ?), predikcia udalostí (Čo sa môže stať ?), a aj reakcia na ne (Čo môžeme spraviť ?). Týmito otázkami sa zaoberá dátové modelovanie. Vo všeobecnosti by sa dalo povedať, že úlohou dátového modelovania je nájsť vzorec medzi závislou (vstupnou) a nezávislou (výstupnou) premennou, ktorý je skrytý v súbore dát, ale na rozdiel od regresných metód, dátové modelovanie extrahuje model z údajov bez akýchkoľvek predpokladov na funkčnosť \cite{mishra:data_modeling:2018}.
 
-Výhodou dátového modelovania, v porovnaní s obyčajnou regresnou analýzou je, že dokáže identifikovať skryté vzťahy v dátach, obchádza nutnosť explicitne definovať funkčné formy pre vstupno-výstupný vzťah, má možnosť ladenia modelu počas "učenia". Avšak určitá miera interpretovateľnosti modelu sa môže stratiť z dôvodu zložitosti modelu -- takéto modely označujeme ako "black box" alebo "čierna skrinka" \cite{mishra:data_modeling:2018}.
+%Výhodou dátového modelovania, v porovnaní s obyčajnou regresnou analýzou je, že dokáže identifikovať skryté vzťahy v dátach, obchádza nutnosť explicitne definovať funkčné formy pre vstupno-výstupný vzťah, má možnosť ladenia modelu počas "učenia". Avšak určitá miera interpretovateľnosti modelu sa môže stratiť z dôvodu zložitosti modelu -- takéto modely označujeme ako \aps{black box} alebo \aps{čierna skrinka} \cite{mishra:data_modeling:2018}.
 
 \section{Dátové modely}
 V tejto časti si uvedieme niektoré základné formulácie modelov lineárnych dynamických systémov v diskrétnom čase, ktoré sa najčastejšie používajú pri identifikácii nameraných údajov. Najskôr je však nutné zaviesť pojem ARMA proces, na základe ktorého môžeme vyjadriť ľubovoľný stacionárny náhodný signál ako biely šum prechádzajúci lineárnym systémom \cite{fikar:identifikacia:1999}.
@@ -58,3 +58,39 @@ Zatiaľ čo AR sa venuje regresnej časti, zložka MA modeluje vplyv poruchovej 
  			 &= b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b).
  	\end{split}
  \end{equation}
+ 
+ \textbf{ARMAX model}
+ \newline
+ Ide o modifikovaný ARX model, kde sa predpokladá, že chyba vstupuje ako MA model. Výsledný tvar je nasledovný 
+ \begin{equation}
+	 \begin{split}
+		 y(t) = &- a_{1}y(t-1) - \dots - a_{n_a}y(t-n_a) + \\
+		 		&+ b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b) + \\
+		 		&+ e(t) + c_{1}e(t-1) + \dots + c_{n_c}e(t-n_c).
+	 \end{split} 
+ \end{equation}
+ 
+ \textbf{OE model}
+ \newline
+ Ďalším modelom v tejto sérii je OE model, teda \aps{Output Error} resp. \aps{Chyba na Výstupe}. Jeho štruktúra je podobná s ARX model, avšak s tým rozdielom, že OE model obsahuje vnútornú premennú $w(t)$, ktorá nie je priamo pozorovateľná a preto sa musí odhadovať
+ \begin{equation}
+	 \begin{split}
+		 w(t) = &- f_{1}w(t-1) - \dots - f_{n_f}w(t-n_f) + \\
+		 		&+ b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b), \\
+		 y(t) = &\quad w(t) + e(t).
+	 \end{split} 
+ \end{equation}
+ 
+ \textbf{Box-Jenkinsov model}
+ \newline
+ Všeobecnejšia forma OE modelu predstavuje Box-Jenkinsov model, kde šum na výstupe je modelovaný ako ARMA proces
+ \begin{equation}
+ 	y(t) = \frac{B(q)}{F(q)}u(t) + \frac{C(q)}{D(q)}e(t).
+ \end{equation}
+ 
+\textbf{Všeobecný model}
+\newline 
+Predstavuje najviac zovšeobecnenú formu, ktorá je vyhovujúca pre všetky uvedené modely
+\begin{equation}
+	A(q)y(t) = \frac{B(q)}{F(q)}u(t) + \frac{C(q)}{D(q)}e(t).
+\end{equation}

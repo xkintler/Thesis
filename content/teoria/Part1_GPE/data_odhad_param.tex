@@ -1,4 +1,99 @@
 \section{Odhad parametrov}
-\subsection{Optimalizačné metódy}
-\subsection{Prístupy k odhadu parametrov}
+Podobne dôležitá ako je samotná štruktúra resp. voľba dátového modelu, je aj odhad jeho parametrov. V tejto časti spomenieme niektoré z najviac využívaných metód na identifikáciu či už statických alebo dynamických modelov. 
+
+Skôr ako začneme rozoberať samotné metódy, je potrebné spomenúť základné požiadavky na odhad parametrov \cite{beck:param_est:1977}, ktoré by mala každá dobrá metóda spĺňať. Tieto požiadavky tvoria súhrn štatistických vlastností, ktoré chceme, aby daná metóda mala, pretože vedú k správnemu, možno by bolo lepšie povedať k optimálnemu, odhadu parametrov.
+
+\subsection{Požiadavky na odhad parametrov}
+Majme vektor $ \hat{\theta} $, ktorý predstavuje vektor odhadnutých parametrov $ \theta $, potom:
+\begin{itemize}
+	\item[] \textbf{nevychýlenosť} odhadu definujeme ako
+	\begin{equation*}
+		E\left\lbrace \hat{\theta}^k \right\rbrace = \theta, 
+	\end{equation*}
+	čo znamená, že ak odhad parametrov uskutočníme na základe $ k $ meraní, potom pre každé meranie $ k $ musí platiť, že stredná hodnota odhadnutých parametrov sa rovná ich skutočným hodnotám.
+	\item[] \textbf{konzistencia} znamená, že pre ľubovoľný vektor konštánt $ \delta > 0 $ platí
+	\begin{equation*}
+		\lim\limits_{k \rightarrow \infty} P \left( \left| \hat{\theta}^k - \theta \right| < \delta \right) = 1. 
+	\end{equation*}
+	Táto definícia v podstate tvrdí, že so zväčšujúcim sa počtom dát, by sa odhad parametrov mal zlepšovať resp. by sa mal blížiť ku skutočným hodnotám.
+	\item[] \textbf{výdatnosť}, t.j., ak medzi odhadom $ \hat{\theta} $ a ľubovoľným ďalším odhadom $ \tilde{\theta} $ platí 
+	\begin{equation*}
+		\text{Cov} \left( \tilde{\theta} \right) - \text{Cov} \left( \hat{\theta} \right) \geq 0,
+	\end{equation*}
+	teda minimálny odhad je ten, ktorý má minimálnu disperziu (v skalárnom prípade). Pri nulovej disperzii prechádza pravdepodobnosť v istotu. Výdatnosť sa v literatúre môže označovať taktiež ako efektívnosť \citealp*{beck:param_est:1977}.
+\end{itemize}
+
+\subsection{Metódy identifikácie statických modelov}
+\textbf{Metóda najmenších štvorcov}
+\newline
+Jednou z najpoužívanejších metód, ktorú vynašiel Gauss pri výpočte obežných dráh komét a planét z nameraných údajov, je metóda najmenších štvorcov \cite{hostetter:recursive_est:1987}. Princíp tejto metódy je založený na hľadaní takej kombinácie parametrov systému, ktorá minimalizuje vzdialenosť medzi nameranými a odhadnutými údajmi. Treba zdôrazniť, že táto metóda vyžaduje, aby parametre modelu boli v lineárnom vzťahu k vstupom.
+
+Začnime nasledovne. Majme systém $ F(\theta, x) $, ktorý je funkciou vstupov modelu $ x $ a parametrov $ \theta $. Výstup $ y $ z takéhoto systému, ktorý je zaťažený chybou merania $ e $, je
+\begin{equation}
+	y = \theta^T x + e = \theta_1x_1 + \theta_2x_2 + \dots + \theta_kx_k.
+\end{equation}
+Pokúsme sa nájsť, takú hodnotu parametrov $ \hat{\theta} $, ktorá by minimalizovala súčet druhých mocnín odchýliek nameraných údajov od modelových výstupov ako
+\begin{equation}
+	J\left(\theta\right) = \sum_{i=1}^{k} e_i^2 = \sum_{i=1}^{k} \left(y_i - \theta^T x_i\right)^2.
+\end{equation}
+Túto rovnicu môžeme napísať vo vektorovom tvare
+\begin{equation}
+	J\left(\theta\right) = \left(Y - X\theta \right)^T \left(Y - X\theta \right).
+\end{equation} 
+Formálne sa rovnica nezmenila, iba sme zadefinovali dva nové vektory
+\begin{equation}
+	Y = \begin{pmatrix}
+			y_1 \\
+			y_2 \\
+			\vdots \\
+			y_k
+		\end{pmatrix}, \qquad
+	X = \begin{pmatrix}
+			x_1^T \\
+			x_2^T \\
+			\vdots \\
+			x_k^T
+		\end{pmatrix}.
+\end{equation}
+Podmienku minima zabezpečíme z nulovej hodnoty gradientu funkcie $ J(\theta) $ podľa $ \theta $.
+\begin{equation}
+	\nabla J \left(\theta\right) = \frac{\partial J \left(\theta\right)}{\partial \theta} = -X^T Y + X^T X\hat{\theta} = 0.
+\end{equation}
+Z toho jasne vyplýva, že ak existuje inverzia výrazu $ X^T X $, vektor odhadovaných parametrov získame ako 
+\begin{equation}
+	\hat{\theta} = \left(X^T X\right)^{-1}X^T Y.
+\end{equation}
+Bez dôkazu uvádzame, že metóda najmenších štvorcov spĺňa všetky požiadavky na odhad parametrov \cite{fikar:identifikacia:1999}.
+
+\textbf{Modifikovaná metóda najmenších štvorcov}
+\newline
+V prípade, že náhodný šum $ e $ je korelovaný a poznáme jeho kovariančnú maticu $ \Sigma $, môžeme prepísať kritérium minimalizácie do tvaru 
+\begin{equation}
+	J\left(\theta\right) = \left(Y - X\theta \right)^T \Sigma^{-1} \left(Y - X\theta \right).
+\end{equation}
+Ak uvažujeme stochastický proces, potom najlepší nevychýlený odhad parametrov $ \hat{\theta} $ získame ako
+\begin{equation}
+	\hat{\theta} = \left(X^T \Sigma^{-1} X\right)^{-1}X^T \Sigma^{-1} Y.
+\end{equation}
+Takúto modifikáciu metódy najmenších štvorcov používame najmä vtedy, ak sa v meraní vyskytujú systematické chyby, zaznamenávanie nameraných údajov má časové oneskorenie, disponujeme nesprávnym modelom, zvolili sme nesprávne vstupné veličiny alebo namerané dáta boli nejakým spôsobom filtrované alebo extrapolované \cite{fikar:identifikacia:1999}. 
+
+\subsection{Metódy identifikácie dynamických modelov}
+Odhad parametrov dynamických systémov má tú nevýhodu, že niektoré parametre systému sa môžu v čase meniť, tým pádom nám metódy statickej identifikácie nepomôžu. Tejto problematike sa v minulosti venovalo viacero vedeckých prác \cite{mehrkanoon:dyn_param_est:2012} -- \cite{stortelder:dyn_param_est:1996} a stále sa skúmajú nové prístupy a metódy, ktoré ponúkajú zaujímavé výsledky \cite{hou:dyn_param_est_nn:2019}. My v tejto časti spomenieme iba niektoré základné metódy, ktoré riešia problematiku odhadu parametrov dynamických systémov.
+
+\textbf{Rekurzívna metóda najmenších štvorcov}
+\newline
+Základnou myšlienkou rekurzívnej metódy najmenších štvorcov (RMNŠ) je modifikácia odhadnutého parametra $ \hat{\theta}(t-1) $ na základe údajov do času $ t-1 $ \cite{hostetter:recursive_est:1987}. Rekurzívne metódy majú viacero výhod -- s veľkou výhodou sa využívajú pre spracovanie údajov v reálnom čase a pre odhad v čase meniacich sa parametrov; ich požiadavky na pamäť sú veľmi malé. Najmä kvôli prvej vlastnosti si táto metóda dokáže nájsť veľmi dobre uplatnenie pre adaptívne systémy, kde akčný zásah je založený na aktuálnom modely \cite{koo:rmns:2019}.
+
+Formálne môžeme zapísať algoritmus rekurzívnej metódy najmenších štvorcov nasledovne
+\begin{equation}
+	\begin{split}
+		e(t+1) &= y(t+1) - z^T(t+1)\hat{\theta}(t), \\
+		\gamma(t+1) &= \left[ 1 + z^T(t+1)P(t)z(t+1) \right]^{-1}, \\
+		L(t+1) &= \gamma(t+1)P(t)z(t+1), \\
+		P(t+1) &= P(t) - \gamma(t+1)P(t)z(t+1)z^T(t+1)P(t), \\
+		\hat{\theta}(t+1) &= \hat{\theta}(t) + L(t+1)e(t+1). 
+	\end{split}
+\end{equation}
+Odvodenie algoritmu neuvádzame, ale vieme ho nájsť v rôznej vedeckej literatúre \cite{fikar:identifikacia:1999}. Ako môžeme vidieť, tak RMNŠ algoritmus v každom kroku aktualizuje hodnoty chyby merania $ e(t+1) $, kovariančnej matice $ P(t+1) $ a nakoniec samotný odhad parametrov $ \hat{\theta}(t+1) $. Treba však podotknúť, že táto metóda veľmi závisí od invertibility kovariačnej matice a samozrejme od typu vstupného signálnu, ktorý nemusí byť pre daný model identifikačne výdatný.
+
 
