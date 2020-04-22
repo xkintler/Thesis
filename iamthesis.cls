@@ -65,7 +65,8 @@
 \RequirePackage{etoolbox}
 \RequirePackage{tabularx}
 \RequirePackage{paralist}
-\RequirePackage{subfigure}
+\RequirePackage{caption}
+\RequirePackage{subcaption}
 %----------------------------------------------------------------%
 
 %----------------------------------------------------------------%

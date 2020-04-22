@@ -23,7 +23,7 @@ Majme vektor $ \hat{\theta} $, ktorý predstavuje vektor odhadnutých parametrov
 	teda minimálny odhad je ten, ktorý má minimálnu disperziu (v skalárnom prípade). Pri nulovej disperzii prechádza pravdepodobnosť v istotu. Výdatnosť sa v literatúre môže označovať taktiež ako efektívnosť \citealp*{beck:param_est:1977}.
 \end{itemize}
 
-\subsection{Metódy identifikácie statických modelov}
+\subsection{Metódy statickej identifikácie}
 \textbf{Metóda najmenších štvorcov}
 \newline
 Jednou z najpoužívanejších metód, ktorú vynašiel Gauss pri výpočte obežných dráh komét a planét z nameraných údajov, je metóda najmenších štvorcov \cite{hostetter:recursive_est:1987}. Princíp tejto metódy je založený na hľadaní takej kombinácie parametrov systému, ktorá minimalizuje vzdialenosť medzi nameranými a odhadnutými údajmi. Treba zdôrazniť, že táto metóda vyžaduje, aby parametre modelu boli v lineárnom vzťahu k vstupom.
@@ -75,10 +75,30 @@ Ak uvažujeme stochastický proces, potom najlepší nevychýlený odhad paramet
 \begin{equation}
 	\hat{\theta} = \left(X^T \Sigma^{-1} X\right)^{-1}X^T \Sigma^{-1} Y.
 \end{equation}
-Takúto modifikáciu metódy najmenších štvorcov používame najmä vtedy, ak sa v meraní vyskytujú systematické chyby, zaznamenávanie nameraných údajov má časové oneskorenie, disponujeme nesprávnym modelom, zvolili sme nesprávne vstupné veličiny alebo namerané dáta boli nejakým spôsobom filtrované alebo extrapolované \cite{fikar:identifikacia:1999}. 
+Takúto modifikáciu metódy najmenších štvorcov používame najmä vtedy, ak sa v meraní vyskytujú systematické chyby, zaznamenávanie nameraných údajov má časové oneskorenie, disponujeme nesprávnym modelom, zvolili sme nesprávne vstupné veličiny alebo namerané dáta boli nejakým spôsobom filtrované alebo extrapolované \cite{fikar:identifikacia:1999}.
 
-\subsection{Metódy identifikácie dynamických modelov}
-Odhad parametrov dynamických systémov má tú nevýhodu, že niektoré parametre systému sa môžu v čase meniť, tým pádom nám metódy statickej identifikácie nepomôžu. Tejto problematike sa v minulosti venovalo viacero vedeckých prác \cite{mehrkanoon:dyn_param_est:2012} -- \cite{stortelder:dyn_param_est:1996} a stále sa skúmajú nové prístupy a metódy, ktoré ponúkajú zaujímavé výsledky \cite{hou:dyn_param_est_nn:2019}. My v tejto časti spomenieme iba niektoré základné metódy, ktoré riešia problematiku odhadu parametrov dynamických systémov.
+\textbf{Formulácia vhodnej optimalizačnej úlohy}
+\newline
+Metóda najmenších štvorcov, napriek tomu ako veľmi elegantne si dokáže poradiť s odhadom parametrov, má jednú veľkú nevýhodu. Parametre modelu musia byť v lineárnom vzťahu ku vstupom, pričom samotné vstupy môžu predstavovať ľubovoľné lineárne aj nelineárne funkcie. Týmto sa eliminuje značná časť problematík, ktoré jednoducho nedokáže vyriešiť. 
+
+Ukazuje sa, že vhodným definovaním optimalizačného problému, dokážeme spomenutý problém obísť a nie len to. Takýto prístup nám umožňuje odhadovať parametre dynamických systémov, teda diferenciálnych alebo diferenčných rovníc \cite{villaverde:opt_param_est:2018}.
+
+Majme ľubovoľnú diferenciálnu rovnicu
+\begin{equation}
+	\dot{x}(t) = f\left( t,x(t),\theta \right),
+\end{equation} 
+a súbor nameraných údajov $ y = [y_1, y_2, \dots , y_N] $ z daného dynamického systému. Budeme hľadať takú kombináciu parametrov $ \hat{\theta} $, ktorá minimalizuje sumu kvadrátu rozdielu nameraných a modelových údajov. Odhad parametrov potom získame ako
+\begin{equation}
+	\begin{split}
+		\hat{\theta} = \arg \min_{\theta} \quad & \sum_{n=1}^{N} \left(y_{i} - x_{i}\right)^2. \\
+		\textrm{s.t.} \quad & \dot{x} = f\left( t,x(t),\theta \right)\\
+		 & x(0) = x_0
+	\end{split}
+\end{equation} 
+Ako si môžeme všimnúť, účelová funkcia takto zadefinovanej optimalizačnej úlohy a metódy najmenších štvorcov je totožná. Rozdiel je v tom, že zatiaľ čo pri metóde najmenších štvorcov sme boli schopný nájsť analytické riešenie, v tomto prípade je nutné riešiť danú optimalizačnú úlohu numericky a takýto prístup k odhadu parametrov je výpočtovo náročnejší.
+
+\subsection{Metódy dynamickej identifikácie}
+Odhad parametrov dynamických systémov má tú nevýhodu, že niektoré parametre systému sa môžu v čase meniť, tým pádom nám metódy statickej identifikácie nepomôžu. Tejto problematike sa v minulosti venovalo viacero vedeckých prác \cite{mehrkanoon:dyn_param_est:2012} -- \cite{stortelder:dyn_param_est:1996} a stále sa skúmajú nové prístupy a metódy, ktoré ponúkajú zaujímavé výsledky \cite{hou:dyn_param_est_nn:2019}. My v tejto časti spomenieme iba jednu metódu, ktorá rieši problematiku dynamického odhadu parametrov.
 
 \textbf{Rekurzívna metóda najmenších štvorcov}
 \newline
