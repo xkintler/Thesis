@@ -1,6 +1,9 @@
 \documentclass[slovak]{iamthesis}
 % changle "slovak" to "english" for english version of the thesis
+\usepackage{accents}
 
+\newcommand{\aps}[1]{``#1''}
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
 
 %----------------------------------------------------------------%
 % THESIS DATA
@@ -90,7 +93,6 @@
 \tableofcontents
 \renewcommand{\baselinestretch}{1.1}\normalsize
 
-\newcommand{\aps}[1]{``#1''}
 
 
 % ----------------------------------------------------------------%
@@ -116,8 +118,7 @@
 	\include{content/teoria/Part1_GPE/data_basic}
 	\include{content/teoria/Part1_GPE/data_odhad_param}
 	\include{content/teoria/Part1_GPE/data_GPE}
-	\include{content/teoria/Part1_GPE/data_rad_modelu}
-	\include{content/teoria/Part1_GPE/data_verifikacia}
+	\include{content/teoria/Part1_GPE/data_gpe_identification}
 	\include{content/teoria/Part1_GPE/data_priklady}
 	
 	% PART 2 - Pouzitie hybridnych modelov
