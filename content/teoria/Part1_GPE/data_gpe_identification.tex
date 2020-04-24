@@ -1,3 +1,70 @@
 \section{Identifikácia FIR modelu}
+Doteraz sme načrtli situáciu, ako by sme mohli využiť metódu garantovaného odhadu na určenie minimálnej štruktúry modelu a odhad jeho parametrov. Poďme si teraz ukázať ako by sme túto metódu mohli aplikovať na niektorých dátových dynamických modeloch a začneme s FIR modelom.
+
+Najskôr si pripomenieme štruktúru FIR modelu. Ako uvádza rovnica \ref{eq:FIR_m}, FIR model má nasledovný tvar
+\begin{equation*}
+	\hat{y}(t) = \sum_{i=1}^{n_b} b_{i}u(t-i) = b_{1}u(t-1) + b_{2}u(t-2) + \dots + b_{n_b}u(t-n_b),
+\end{equation*}
+kde $ n_b $ predstavuje rád modelu, resp. počet parametrov $ b $. 
+
+Aby sme mohli odhadnúť parametre takéhoto modelu, potrebujeme najskôr poznať jeho štruktúru. Na to využijeme metódu odhadu minimálneho rádu modelu, ktorú sme zadefinovali ako \ref{eq:GPE_m_order_est}. V tomto prípade musíme danú formuláciu upraviť do tvaru
+\begin{equation}
+	\begin{split}
+		& \min_{B \in \left[ b_{1}, b_{2}, \dots, b_{n_b} \right]} \quad 0, \\
+		& \qquad \quad \text{s.t.} \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}
+	\end{split}
+\end{equation} 
+ktorá nám vráti hodnotu minimálneho rádu FIR modelu $ n_b $. V tomto momente už máme k dispozícii informáciu o vyhovujúcej štruktúre modelu, ktorá vyhovuje podmienke GOP. Nasleduje odhad intervalových hodnôt parametrov. Tie získame modifikáciou rovnice \ref{eq:gpe:general_form}
+\begin{equation}
+	\begin{split}
+		\left[ \ubar{b}_i, \bar{b}_i \right] = \min_{B \in \left[ \ubar{b}, \bar{b} \right]} / &\max_{B \in \left[ \ubar{b}, \bar{b} \right]} \quad b_i,\\
+		\text{s.t.}& \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}	
+	\end{split}
+\end{equation}
+pre všetky $ i = 1, 2, \dots, n_b $.  
+
+Týmto sme ukončili identifikáciu FIR modelu minimálneho rádu a v ďalšom postupe by sme sa mali venovať overovaniu správnosti a posudzovaniu kvality daného modelu a modelov vyššieho rádu.
 
 \section{Identifikácia ARX modelu}
+ARX model, ako opisuje rovnica \ref{eq:ARX_m}, má štruktúru doplnenú o člen $ A(q) $ oproti FIR modelu a má tvar
+\begin{equation*}
+	\begin{split}
+		\hat{y}(t) &= \frac{\sum_{i=1}^{n_b} b_{i}u(t-i)}{1 + \sum_{i=1}^{n_a} a_{i}q^{-i}} =\\
+		&= -a_{1}\hat{y}(t-1) - \dots -a_{n_a}\hat{y}(t-n_a) + b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b).
+	\end{split}
+\end{equation*}
+Výhodou ARX modelu je, že dokáže drasticky znížiť počet parametrov oproti FIR modelu, kvôli príspevku minulých výstupov $ \hat{y}(t-i) $. Avšak, v porovnaní s identifikáciou FIR modelu, je identifikácia ARX modelu omnoho zložitejšia problematika. Práve príspevok minulých výstupov nám transformuje optimalizačnú úlohu z jednoduchej lineárnej (ako to bolo pri identifikácii FIR modelu) na zložitú nelineárnu. V každom prípade postup identifikácie ostáva rovnaký. Najskôr určíme minimálnu štruktúru ARX modelu, ktorá spĺňa podmienky GOP a v ďalšom kroku odhadneme jej parametre resp. intervalové hodnoty parametrov. 
+
+Minimálnu štruktúru ARX modelu, teda rád čitateľa $ n_b $ a rád menovateľa $ n_a $, nájdeme ako riešenie danej optimalizačnej úlohy
+\begin{equation}
+	\begin{split}
+		\min_{a_{1},\dots,a_{n_a},b_{1},\dots,b_{n_b},\hat{y}(t)} & \quad 0.\\
+		\text{s.t.} \qquad \quad  & \quad \ubar{e} \leq y - \hat{y} \leq \bar{e} \\
+		& \quad \hat{y}(0) = \hat{y}_{0}
+	\end{split}
+\end{equation}
+A odhad intervalových hodnôt parametrov určíme ako
+\begin{equation}
+	\begin{split}
+		\left[ \ubar{\theta}_i, \bar{\theta}_i \right] = \min_{\Theta \in \left[ \ubar{\theta}, \bar{\theta} \right]} / \max_{\Theta \in \left[ \ubar{\theta}, \bar{\theta} \right]} & \quad \theta_i,\\
+		\text{s.t.} \qquad & \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}\\
+		& \quad \hat{y}(0) = \hat{y}_{0}
+	\end{split}
+\end{equation}
+pre všetky $ i = 1,2, \dots, n_a+n_b $ a $ \Theta $ predstavuje vektor minimálnych a maximálnych hodnôt parametrov $ a, b $
+\begin{equation*}
+	\Theta = 
+	\begin{pmatrix}
+		\ubar{a}_{1} & \bar{a}_{1}\\
+		\ubar{a}_{2} & \bar{a}_{2}\\
+		\vdots & \vdots\\
+		\ubar{a}_{n_a} & \bar{a}_{n_a}\\
+		\ubar{b}_{1} & \bar{b}_{1}\\
+		\ubar{b}_{2} & \bar{b}_{2}\\
+		\vdots & \vdots\\
+		\ubar{b}_{n_b} & \bar{b}_{n_b}\\	
+	\end{pmatrix}.
+\end{equation*}
+Zložitosť týchto optimalizačných úloh je pravdepodobne očividná. Okrem toho, že nutne musíme v každom nameranom bode odhadovať hodnotu $ \hat{y}(t) $, čo nám pridáva na počte odhadovaných parametrov, tak k nelineárnej optimalizácii potrebujeme pristupovať špeciálne, pretože jej výsledky nemusia konvergovať k spoľahlivému riešeniu.
+
+\section{Príklady identifikácie}

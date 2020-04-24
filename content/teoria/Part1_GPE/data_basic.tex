@@ -41,14 +41,15 @@ Zatiaľ čo AR sa venuje regresnej časti, zložka MA modeluje vplyv poruchovej 
 \newline
  ARX (Autoregressive with eXogenous variable) model predpokladá, že skutočný dynamický systém je popísaný diferenčnou rovnicou v tvare
  \begin{equation}
- 	y(t) = \frac{B(q)}{A(q)}u(t) = \frac{\sum_{i=1}^{n_b} b_{i}q^{-i}}{\sum_{i=1}^{n_a} a_{i}q^{-i}}u(t),
+ 	y(t) = \frac{B(q)}{A(q)}u(t) = \frac{\sum_{i=1}^{n_b} b_{i}q^{-i}}{1 + \sum_{i=1}^{n_a} a_{i}q^{-i}}u(t),
  \end{equation}
  čo môžeme prepísať do tvaru 
  \begin{equation}
 	 \begin{split}
 		 y(t) = &- a_{1}y(t-1) - \dots - a_{n_a}y(t-n_a) + \\
 		 		&+ b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b) \left(+ e(t)\right), 
-	 \end{split} 
+	 \end{split}
+	 \label{eq:ARX_m} 
  \end{equation}
  pričom ARX model predpokladá, že chyba vstupuje do rovnice systému v podobe bieleho šumu.
  
@@ -60,6 +61,7 @@ Zatiaľ čo AR sa venuje regresnej časti, zložka MA modeluje vplyv poruchovej 
  		y(t) &= B(q)u(t) = \sum_{i=1}^{n_b} b_{i}q^{-i}u(t) = \\
  			 &= b_{1}u(t-1) + \dots + b_{n_b}u(t-n_b).
  	\end{split}
+ 	\label{eq:FIR_m}
  \end{equation}
  
  \textbf{ARMAX model}

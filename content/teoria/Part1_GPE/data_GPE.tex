@@ -101,6 +101,7 @@ Odhad minimálneho rádu modelu môžeme opäť sformulovať ako optimalizačný
 		n_y \leftarrow \min_{\theta} & \quad 0, \\
 		\text{s.t} & \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}
 	\end{split}
+	\label{eq:GPE_m_order_est}
 \end{equation}
 kde $ \theta^T = (\theta_1, \theta_2, \dots, \theta_{n_y}) $ je vektor odhadovaných parametrov a $ n_y $ predstavuje odhadovaný minimálny rád modelu. Takáto formulácia rieši problematiku prípustnosti, ktorej cieľom je nájsť najjednoduchšiu štruktúru dátového modelu, pri ľubovoľných hodnotách parametrov $ \theta $, ktorá neporušuje ohraničenia optimalizačného problému.  
 
@@ -140,4 +141,17 @@ Bayesove informačné kritérium slúži na hodnotenie kvality modelu, ktoré je
 \end{equation}
 
 \subsection{Pareto front}
-Táto metóda je pomenovaná po talianskom inžinierovi, sociológovi, ekonómovi, politickom vedcovi a filozofovi Vilfredovi Paretovi. 
+Táto metóda je pomenovaná po talianskom inžinierovi, sociológovi, ekonómovi, politickom vedcovi a filozofovi Vilfredovi Paretovi. On si ako prvý uvedomil, že veľa ekonomických riešení pomáhajú určitej skupine ľudí, zatiaľ čo inej ubližujú. Jeho prácou sa snažil nájsť také riešenie, ktoré  by na jednej strane pomáhalo a na druhej neubližovalo \cite{mornati:pareto_opt:2013}. 
+
+Problematiku, ktorú riešil Pareto, bola viacúčelová optimalizácia. Pri tomto druhu optimalizácie, kedy rôzne účely (účelové funkcie) sú si odporujúce, najlepšie riešenie nájdeme ako kompromis, pretože nie je možné spraviť zlepšenie v jednom smere bez toho, aby nedošlo k degradácii ostatných. Súbor všetkých Pareto-optimálnych riešení sa nazýva Pareto front, pretože zvyčajne graficky tvorí zreteľný front bodov.
+
+Jednu ukážku Pareto frontu môžeme vidieť na Obr. \ref{fig:Pareto_example}. Modrou sú zobrazené možné optimálne riešenia a červená predstavuje utopický bod -- tento nie je možné nikdy dosiahnuť a predstavuje to najlepšie možné riešenie. Ako sa čítajú takéto grafy ? V prvom rade je nutné si uvedomiť, ako sú kvantifikované dané vlastnosti A,B. Povedzme, že väčšia hodnota znamená zhoršenie danej vlastnosti. Ako sa tak pohybujeme po horizontálnej osi, zlepšujeme vlastnosť A, ale pritom zhoršujeme vlastnosť B. Mohli by sme povedať, že bod, ktorý je najbližšie k utopickému bodu, bude predstavovať najlepší možný kompromis medzi oboma vlastnosťami. Takýto predpoklad je správny, ale veľa závisí od profilu frontu. Na Pareto front sa môžeme pozerať ešte inak. Rozdelme front na dve časti v bode, kde sa výraznejšie mení sklon frontu, napr. keď vlastnosť B dosahuje hodnotu 1. Do tohto bodu, každé výraznejšie zlepšenie vo vlastnosti A, predstavuje menšiu degradáciu vlastnosti B, čo je pre nás výhodnejšie. Avšak, od tohto bodu sa sklon frontu mení a ďalším zlepšovaním vlastnosti A, ktoré by bolo v tom prípade omnoho menšie, by sme výraznejšie zhoršovali vlastnosť B a to by bolo kontraproduktívne.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{images/Pareto_ex}
+	\caption{Zobrazenie Pareto front -- optimálne riešenia (modrá), utopický bod (červená).}
+	\label{fig:Pareto_example}
+\end{figure}
+
+Pareto front môžeme využiť aj pri verifikácii kvality dátových modelov. Stačí ak zobrazíme niektoré skúmané vlastnosti vybraného súboru modelov, napríklad presnosť a nadhodnotenie (v zmysle zložitosti modelu, \textit{angl. \aps{overestimation}}), ktoré sa snažíme zlepšiť, optimalizovať. A na základe predchádzajúcej úvahy vyberieme taký model, ktorý bude predstavovať ten najlepší možný kompromis medzi pozorovanou presnosťou modelu a nadhodnotením.
