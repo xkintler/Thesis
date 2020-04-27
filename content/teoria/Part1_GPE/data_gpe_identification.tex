@@ -13,6 +13,7 @@ Aby sme mohli odhadnúť parametre takéhoto modelu, potrebujeme najskôr pozna�
 		& \min_{B \in \left[ b_{1}, b_{2}, \dots, b_{n_b} \right]} \quad 0, \\
 		& \qquad \quad \text{s.t.} \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}
 	\end{split}
+	\label{eq:gpe_fir_min_rad}
 \end{equation} 
 ktorá nám vráti hodnotu minimálneho rádu FIR modelu $ n_b $. V tomto momente už máme k dispozícii informáciu o vyhovujúcej štruktúre modelu, ktorá vyhovuje podmienke GOP. Nasleduje odhad intervalových hodnôt parametrov. Tie získame modifikáciou rovnice \ref{eq:gpe:general_form}
 \begin{equation}
@@ -20,6 +21,7 @@ ktorá nám vráti hodnotu minimálneho rádu FIR modelu $ n_b $. V tomto moment
 		\left[ \ubar{b}_i, \bar{b}_i \right] = \min_{B \in \left[ \ubar{b}, \bar{b} \right]} / &\max_{B \in \left[ \ubar{b}, \bar{b} \right]} \quad b_i,\\
 		\text{s.t.}& \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}	
 	\end{split}
+	\label{eq:gpe_fir_param_est}
 \end{equation}
 pre všetky $ i = 1, 2, \dots, n_b $.  
 
@@ -42,6 +44,7 @@ Minimálnu štruktúru ARX modelu, teda rád čitateľa $ n_b $ a rád menovate�
 		\text{s.t.} \qquad \quad  & \quad \ubar{e} \leq y - \hat{y} \leq \bar{e} \\
 		& \quad \hat{y}(0) = \hat{y}_{0}
 	\end{split}
+	\label{eq:gpe_arx_min_rad}
 \end{equation}
 A odhad intervalových hodnôt parametrov určíme ako
 \begin{equation}
@@ -50,6 +53,7 @@ A odhad intervalových hodnôt parametrov určíme ako
 		\text{s.t.} \qquad & \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}\\
 		& \quad \hat{y}(0) = \hat{y}_{0}
 	\end{split}
+	\label{eq:gpe_arx_param_est}
 \end{equation}
 pre všetky $ i = 1,2, \dots, n_a+n_b $ a $ \Theta $ predstavuje vektor minimálnych a maximálnych hodnôt parametrov $ a, b $
 \begin{equation*}
@@ -68,3 +72,59 @@ pre všetky $ i = 1,2, \dots, n_a+n_b $ a $ \Theta $ predstavuje vektor minimál
 Zložitosť týchto optimalizačných úloh je pravdepodobne očividná. Okrem toho, že nutne musíme v každom nameranom bode odhadovať hodnotu $ \hat{y}(t) $, čo nám pridáva na počte odhadovaných parametrov, tak k nelineárnej optimalizácii potrebujeme pristupovať špeciálne, pretože jej výsledky nemusia konvergovať k spoľahlivému riešeniu.
 
 \section{Príklady identifikácie}
+V tejto časti si na konkrétnom príklade ukážeme identifikáciu FIR aj ARX modelu. Začnime tým, že si zadefinujeme problematiku. Predstavme si, že sme z neznámeho procesu získali údaje o vstupoch a výstupoch, tak ako je znázornené na Obr. \ref{fig:gpe_tf_ex_data}, ktoré sú v skutočnosti opísané prenosovou funkciou 1. rádu so zosilnením $ K = 8 $ a časovou konštantou $ T = 2 $
+\begin{equation*}
+	G(s) = \frac{K}{Ts + 1} = \frac{8}{2s + 1}.
+\end{equation*}
+Tak ako všetky reálne dáta, výstupné údaje sú zaťažené šumom, a presnosť merania senzora je $ e = \pm 0.8 $. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/gpe_tf_ex_input}
+		\caption{Vstupné údaje}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/gpe_tf_ex_output}
+		\caption{Výstupné údaje}
+	\end{subfigure}
+	\caption{Namerané dáta z procesu opísaného prenosovou funkciou 1. rádu so zosilnením $ K = 8 $ a časovou konštantou $ T = 2 $.}
+	\label{fig:gpe_tf_ex_data}
+\end{figure}
+
+Postup identifikácie oboch modelov metódou garantovaného odhadu parametrov je rovnaký. Najskôr odhadneme najjednoduchší model, ktorý vyhovuje podmienke GOP. V prípade FIR modelu môžeme túto problematiku vyjadriť rovnicou \ref{eq:gpe_fir_min_rad} a pre ARX model \ref{eq:gpe_arx_min_rad}. V ďalšom kroku určíme intervalový odhad parametrov danej štruktúry modelu. Riešenie nájdeme podľa rovnice \ref{eq:gpe_fir_param_est}, v prípade FIR alebo podľa \ref{eq:gpe_arx_param_est}, ak sa bude jednať o ARX model.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{images/gpe_tf_ex_FIRident}
+	\caption{Výsledok identifikácie FIR modelu ($ n_b = 11 $) -- minimálna realizácia (červená), maximálna realizácia (modrá), namerané údaje s danou chybou merania (čierna).}
+	\label{fig:gpe_tf_ex_FIR}
+\end{figure}
+
+Výsledok identifikácie FIR modelu môžeme vidieť na Obr. \ref{fig:gpe_tf_ex_FIR}. Minimálna veľkosť modelu, ktorá dokázala vhodne opísať dané dáta v stanovej chybe merania, bola $ n_b = 11 $. Po intervalovom odhade parametrov sme získali FIR v nasledovnom tvare
+\begin{equation*}
+	\begin{split}
+		\hat{y}(t) \quad = \quad &[1.6587, 3.2587]u(t-1) + [-1.4459, 1.7541]u(t-2) + \\
+		 + &[0.7417, 3.9417]u(t-3) + [-1.2112, 1.9888]u(t-4) + \\
+		 + &[-1.8069, 1.3931]u(t-5) + [-0.8084, 2.3916]u(t-6) + \\
+		 + &[-0.7821, 2.4179]u(t-7) + [-0.6424, 2.5576]u(t-8) + \\
+		 + &[-1.3556, 1.8444]u(t-9) + [-2.7116, 0.4884]u(t-10) + \\
+		 + &[0.2836, 1.9842]u(t-11).
+	\end{split}
+\end{equation*}
+
+Výstup identifikácie ARX modelu môžeme vidieť na Obr. \ref{fig:gpe_tf_ex_ARX}. Minimálna štruktúra bola opísaná diferenčnou rovnicou procesu 1. rádu a po odhade intervalových hodnôt parametrov, sme získali model v tvare
+\begin{equation*}
+	\hat{y}(t) = [0.7581, 0.7840]\hat{y}(t-1) + [1.7396, 1.9155]u(t-1).
+\end{equation*}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{images/gpe_tf_ex_ARXident}
+	\caption{Výsledok identifikácie ARX modelu ($ n_b = 1, n_a = 1 $) -- minimálna realizácia (červená), maximálna realizácia (modrá), namerané údaje s danou chybou merania (čierna).}
+	\label{fig:gpe_tf_ex_ARX}
+\end{figure}
+
+Rozdiel v zložitosti modelov je očividný, avšak v oboch prípadoch sme získali oblasť riešení, ktorá nám garantuje, že skutočné riešenie leží niekde vo vnútri. Táto oblasť je definovaná kombináciou minimálnych resp. maximálnych parametrov, ktoré nám zabezpečia spodné (minimálna realizácia) resp. horné (maximálna realizácia) ohraničenie. Treba taktiež spomenúť, že nie sme odkázaný iba na intervalový odhad. Akonáhle získame informáciu o štruktúre modelu, môžeme využiť napríklad metódu najmenších štvorcov (MNŠ) na identifikáciu neznámych parametrov. 

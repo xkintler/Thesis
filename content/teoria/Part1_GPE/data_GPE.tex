@@ -5,7 +5,7 @@ Zostáva tu však ešte jeden problém, ktorý je omnoho zložitejší ako samot
 
 Garantovaný odhad parametrov (GOP) je metóda, ktorá obchádza problém poznania rozdelenia náhodných veličín a namiesto toho predpokladá ľubovoľnú ale ohraničenú chybu merania. Výsledkom identifikácie pomocou GOP sú intervalové odhady parametrov modelu, ktoré zabezpečia, že nameraný výstup procesu sa bude nachádzať v rozmedzí stanovenej chyby merania \cite{paulen:gpe:2017}. Demonštrujme si fungovanie tejto metódy na nasledujúcom príklade.
 
-\section{Ilustračný príklad metódy GOP}
+\section{Grafická metóda GOP}
 Predstavme si, že sme získali vstupné $ u $ a výstupné $ y $ údaje z procesu, ktoré v tomto prípade budú predstavovať konštantnú funkciu, tak ako to je zobrazené na Obr. \ref{gpe_ex1_data}. Vieme, že senzor má stanovenú chybu merania $ e $. Štruktúru modelu procesu, z ktorého sme získali údaje, nepoznáme a preto sa rozhodneme, že budeme tieto údaje aproximovať lineárnym modelom
 \begin{equation}
 	\hat{y}(u) = \theta_1 + \theta_2u.
