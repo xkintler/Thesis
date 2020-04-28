@@ -1,1 +1,61 @@
 \section{Optimalizácia prevádzky dynamických systémov}
+Optimalizácia je prostriedok, ktorým sa dosiahne najlepší výsledok za daných okolností. Pri navrhovaní, stavbe a údržbe akéhokoľvek inžinierskeho systému, musia inžinieri prijať mnoho technologických a manažérskych rozhodnutí v niekoľkých fázach. Konečným cieľom všetkých takýchto rozhodnutí je buď minimalizovať potrebné úsilie alebo maximalizovať požadovaný úžitok. Pretože úsilie alebo úžitok, požadovaný v akejkoľvek praktickej situácii, môže byť vyjadrený ako funkcia určitých rozhodovacích premenných, optimalizácia môže byť definovaná ako proces hľadania podmienok, ktoré poskytujú maximálnu alebo minimálnu hodnotu funkcie. Na Obr. \ref{fig:cost_fun_ex} môžeme vidieť, že ak bod $ x^{\star} $ zodpovedá minimálnej hodnote funkcie $ f(x) $, rovnaký bod zodpovedá maximálnej hodnote negatívnej hodnote $ -f(x) $ tej istej funkcie. V tom prípade môžeme optimalizáciu bez straty zovšeobecniť na proces minimalizácie, pretože maximum funkcie dokážeme nájsť ako minimum negatívnej hodnoty rovnakej funkcie \cite{rao:intro_engin_opt:2009}. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\linewidth]{images/optimization_obj}
+	\caption{Minimum účelovej funkcie $ f(x) $ je v rovnakom bode ako maximum $ -f(x) $.}
+	\label{fig:cost_fun_ex}
+\end{figure}
+
+Pri návrhu optimalizačného problému, môže nastať niekoľko situácii -- (a) v najlepšom prípade získame neohraničenú optimalizačnú úlohu, (b) budeme mať ohraničenia v tvare rovnosti alebo (c) zakomponujeme aj ohraničenia v tvare nerovností. Všetky tieto problémy sa často vyskytujú pri riešení efektivity zariadenia a nazývajú sa problémy statickej alebo parametrickej optimalizácie \cite{agrawal:static_opt:1999}. Statická je preto, lebo parametre $ x $ účelovej funkcie $ f(x) $ sú nezávislé od času, nemenia sa. 
+
+Majme všeobecný dynamický systém, ktorý vieme opísať nasledovným modelom
+\begin{equation*}
+	\der{x}{t} = f(t,x,u,\theta),
+\end{equation*}
+kde $ x $ sú stavy systému, $ u $ je riadiaca veličina a $ \theta $ predstavuje parametre modelu. Potom ak definujeme účelovú funkciu $ \ell_e(\bar{x},\bar{u}) $, ktorá vyjadruje ekonomickú kvalitu systému, môžeme získať optimálne ustálené stavy $ \bar{x}^{\star}, \bar{u}^{\star} $ ako
+\begin{equation}
+	\begin{split}
+		\min_{\bar{x},\bar{u}}& \quad \ell_e(\bar{x},\bar{u}), \\
+		\text{s.t.}& \quad \dot{x} = f(t,x,u,\theta) \\
+		& \quad x_{\min} \leq x \leq x_{\max} \\
+		& \quad u_{\min} \leq x \leq u_{\max}
+	\end{split}
+	\label{eq:econ_opt_dyn_sys}
+\end{equation}
+ktoré zaručia, že daná účelová funkcia bude dosahovať minimum v danom bode \cite{hernandez:economics_opt_w_mismatch:2019}. Takýmto spôsobom dokážeme na základe statickej optimalizácie optimalizovať prevádzku akéhokoľvek dynamického systému. Treba však zdôrazniť, že celá táto problematika je založená na poznaní matematického opisu zariadenia. V prípade, že model nebude ekvivalentný so skutočným zariadením (čo v podstate nikdy nie je), získané výsledky nebudú optimálne, v horšom prípade môžu narušiť celé fungovanie zariadenia. To ako sa vysporiadať s touto problematikou vysvetlíme v nasledujúcich častiach.
+
+\subsection{Dvojkroková optimalizácia}
+Je to metóda, ktorá pozostáva z 2 krokov, resp. z 2 optimalizačných úloh. V prvom kroku, na základe nameraných údajov vstupov $ u $ a stavov $ x $ resp. výstupov $ y $, odhadneme neznáme parametre modelu, ktorý opisuje náš dynamický systém. Túto optimalizačnú úlohu by sme mohli sformulovať podobne ako uvádza rovnica \ref{eq:param_est_opt_form}. V druhom kroku využijeme informácie z tohto modelu, napr. informácie o ustálených stavoch $ \bar{x} $, na výpočet optimálnych ustálených hodnôt $ \bar{x}^{\star}, \bar{u}^{\star} $, ktoré môžeme aplikovať na naše zariadenie. Takúto problematiku by sme mohli sformulovať ako v prípade \ref{eq:econ_opt_dyn_sys}. V princípe je možné tento cyklus zopakovať niekoľkokrát, pričom po každom cykle by sme mali získať presnejšie výsledky vzhľadom na daný model.
+
+V skutočnosti táto metóda nerieši problém v rozdiely medzi skutočným zariadením a modelom, i keď v určitých prípadoch dokážeme ladením parametrov modelu zmenšiť tento rozdiel.
+
+\subsection{Schéma úpravy modifikátora}
+V prvom rade treba uviesť, že ide o metódu, ktorá jednak hľadá optimum prevádzky dynamických systémov a jednak rieši problematiku rozdielu nominálneho modelu od skutočnosti. Okrem iného ide o techniku, ktorá má uplatnenie v dynamickej optimalizácii a v posledných rokov nadobudla na významnosti \cite{marchetti:modifier_adapt_scheme:2020}.
+
+Schéma úpravy modifikátora (\textit{angl. \aps{Modifier Adaptation Scheme}}) je iteračná metóda, ktorá ma skvelé uplatnenie v reálnom živote. Hlavnými črtami sú spôsob, akým sa merania používajú na korekciu nominálneho modelu, a úloha, ktorú neskôr model zohráva pri výpočte ďalších vstupov.
+
+Princíp tejto metódy spočíva v úprave gradientu účelovej funkcie nominálneho modelu $ \nabla_N\ell_e(\bar{x},\bar{u}) $ následovným štýlom
+\begin{equation}
+	\nabla J = \nabla_N\ell_e(\bar{x},\bar{u}) + \lambda_k,
+\end{equation}
+kde $ \lambda_k $ predstavuje hodnotu modifikátora v $ k $-tom kroku. Upravený gradient po integrácii má tvar 
+\begin{equation}
+	J^{\tiny{(MA)}} = \ell_e(\bar{x},\bar{u}) + \lambda_ku.
+\end{equation}
+Hodnota modifikátora v $ k $-tom kroku je určená na základe váhovania dvoch faktorov. Určitú časť prispievajú minulé hodnoty modifikátora $ \lambda_{k-1} $ a zvyšnú časť tvorí rozdiel v gradientoch účelových funkcii $ \Delta_{k-1} $ skutočného zariadenia a nominálneho modelu 
+\begin{equation}
+	\lambda_k = c\lambda_{k-1} + \left(1 - c\right)\Delta_{k-1},
+\end{equation}
+kde $ c $ je váhový koeficient, ktorý môže nadobúdať hodnoty $ c \in \lbrace 0; 1 \rbrace $ v závislosti od toho, či chceme aby sa modifikátor menil viac alebo menej s pribúdajúcimi dátami. Samotnú premennú $ \Delta_k $ je náročné určiť správne, pretože obsahuje gradient účelovej funkcie reálneho zariadenia $ \nabla_P\ell_e(\bar{x},\bar{u}) $, ktorý mi nemáme k dispozícii a preto je nutné ho odhadnúť napr. v takejto podobe
+\begin{equation}
+	\nabla_P\ell_{e,k}(\bar{x},\bar{u}) = \frac{\ell_{e,k}(\bar{x},\bar{u}) - \ell_{e,k-1}(\bar{x},\bar{u})}{u_k - u_{k-1}}.
+\end{equation} 
+Potom $ \Delta_k $ môžeme definovať ako 
+\begin{equation}
+	\Delta_k = \nabla_P\ell_{e,k}(\bar{x},\bar{u}) - \nabla_N\ell_{e,k}(\bar{x},\bar{u}).
+\end{equation}
+Treba spomenúť fakt, že práve odhad gradientu účelovej funkcie skutočného zariadenia spôsobuje najväčšie nepresnosti kvôli šumu merania. 
+
+\subsection{Použitie hybridných modelov}
