@@ -5,20 +5,17 @@
 \section{Hybridné modely}
 Základy hybridného modelovania položili Psichogios a Ungar v práci \aps{\textit{A hybrid neural network-first principles approach to process modeling}} z roku 1992 \cite{psichogios:hybrid_process_model:1992}. Ich cieľom bolo vytvoriť hybridný model založený na neurónovej sieti a mechanickom modely vsádzkového biochemického reaktora. Vo výsledku sa im podarilo zlepšiť presnosť predikcie v porovnaní so samotným mechanickým modelom, dosiahnuť lepšiu interpoláciu a extrapoláciu na rozdiel od samotnej neurónovej sieti a výrazne sa uľahčila analýza a interpretácia dát.
 
-Existuje veľa rôznych kombinácii mechanických a dátových modelov, ktoré vedú k ešte väčšiemu množstvu hybridných modelov, ale vo všeobecnosti by sme mohli takýto model sformulovať nasledovne
-\begin{equation}
-	\begin{split}
-		\der{x}{t} &= f(t,x,u,\theta), \\
-		\theta &= g(x,u),
-	\end{split}
-\end{equation}
-kde $ x $ predstavuje stavy, $ u $ vstupy, $ \theta $ parametre procesu. Celá dynamika systému je definovaná funkciou $ f $, ktorá predstavuje základný mechanický model a je závislá na parametroch systému $ \theta $, ale tie zasa závisia od stavov $ x $ a vstupov $ u $, ktoré vieme získať z dátovej časti. Takáto štruktúra hybridného modelu je zobrazená aj na Obr. \ref{fig:hybrid_model_general}.
+Treba zdôrazniť, že pri viacerých chemických, biologických a rôznych ďalších procesoch sú parametre modelu neznáme, pretože zohľadňujú napr. kinetiku konkrétnej chemickej reakcie alebo rast mikroorganizmov, ktorý je špecifický pre konkrétny druh. Ak dátový model dokáže poskytnúť tieto neznáme parametre mechanickému modelu, tak výsledný hybridný model je vhodný aj na predikciu údajov, a tým pádom sa môže využiť na optimalizáciu procesov.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\linewidth]{images/hybrid_model}
-	\caption{Príklad všeobecného hybridného modelu.}
+	\includegraphics[width=\linewidth]{images/hybrid_model}
+	\caption{Architektúra hybridných modelov - a) v sérii, b) paralelne, c) kombinácia v sérii-paralelne.}
 	\label{fig:hybrid_model_general}
-\end{figure}
+\end{figure} 
 
-Treba zdôrazniť, že pri viacerých chemických, biologických a rôznych ďalších procesoch sú parametre modelu neznáme, pretože zohľadňujú napr. kinetiku konkrétnej chemickej reakcie alebo rast mikroorganizmov, ktorý je špecifický pre konkrétny druh. Ak dátový model dokáže poskytnúť tieto neznáme parametre mechanickému modelu, tak výsledný hybridný model je vhodný aj na predikciu údajov, a tým pádom sa môže využiť na optimalizáciu procesov. 
+Existuje veľa rôznych kombinácii mechanických a dátových modelov, ktoré vedú k ešte väčšiemu množstvu hybridných modelov, ale vo všeobecnosti by sme mohli sformulovať tri základné štruktúry hybridných modelov, ktoré sú zobrazené na Obr. \ref{fig:hybrid_model_general}.
+
+\textbf{Zapojenie v sérii.} Takáto štruktúra hybridných modelov sa využíva na odhad neznámych  a časovo-premenných kinetických parametrov $ \theta $ \cite{bhutani:hybrid_modelling_opt:2006}.\newline
+\textbf{Paralelné zapojenie.} Zatiaľ čo nominálny mechanický model zachytáva správanie systému, dátová časť koriguje rozdiely $ \Delta $ medzi skutočným zariadením a mechanickým modelom. Dátový model natrénovaný na týchto rozdieloch, kompenzuje chyby, ktoré vyplývajú z bežných variácií procesu a nelineárnej komplexnej kinetiky \cite{bhutani:hybrid_modelling_opt:2006}.\newline
+\textbf{Kombinovaný prístup -- sériovo-paralelné zapojenie.} V tomto prípade daná architektúra obsahuje dva dátové modely -- jeden, ktorý odhaduje neznáme parametre systému $ \theta $ (v sérii) a druhý, ktorý upravuje výstupy z mechanického modelu o rozdiel oproti skutočnému zariadeniu (paralelne). 

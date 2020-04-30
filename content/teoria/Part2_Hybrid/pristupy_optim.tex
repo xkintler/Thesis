@@ -50,12 +50,46 @@ Hodnota modifikátora v $ k $-tom kroku je určená na základe váhovania dvoch
 \end{equation}
 kde $ c $ je váhový koeficient, ktorý môže nadobúdať hodnoty $ c \in \lbrace 0; 1 \rbrace $ v závislosti od toho, či chceme aby sa modifikátor menil viac alebo menej s pribúdajúcimi dátami. Samotnú premennú $ \Delta_k $ je náročné určiť správne, pretože obsahuje gradient účelovej funkcie reálneho zariadenia $ \nabla_P\ell_e(\bar{x},\bar{u}) $, ktorý mi nemáme k dispozícii a preto je nutné ho odhadnúť napr. v takejto podobe
 \begin{equation}
-	\nabla_P\ell_{e,k}(\bar{x},\bar{u}) = \frac{\ell_{e,k}(\bar{x},\bar{u}) - \ell_{e,k-1}(\bar{x},\bar{u})}{u_k - u_{k-1}}.
+	\nabla_P\ell_{e,k}(\bar{x},\bar{u}) = \frac{\ell_{e,k}(\bar{x},\bar{u}) - \ell_{e,k-1}(\bar{x},\bar{u})}{\bar{u}_k - \bar{u}_{k-1}}.
 \end{equation} 
 Potom $ \Delta_k $ môžeme definovať ako 
 \begin{equation}
 	\Delta_k = \nabla_P\ell_{e,k}(\bar{x},\bar{u}) - \nabla_N\ell_{e,k}(\bar{x},\bar{u}).
 \end{equation}
-Treba spomenúť fakt, že práve odhad gradientu účelovej funkcie skutočného zariadenia spôsobuje najväčšie nepresnosti kvôli šumu merania. 
+Treba spomenúť fakt, že práve odhad gradientu účelovej funkcie skutočného zariadenia $ \nabla_P\ell_{e,k}(\bar{x},\bar{u}) $ spôsobuje najväčšie nepresnosti, najmä kvôli šumu merania. 
 
 \subsection{Použitie hybridných modelov}
+Hybridné modelovanie si tak isto dokáže poradiť s optimalizáciou prevádzky, pričom jasnou výhodou je, že nepotrebuje odhadovať gradient účelovej funkcie, ktorý prispieva najväčšou neistotou metóde úpravy modifikátora. V niektorých vedeckých publikáciach sa ukázalo, že využitie hybridných modelov, pri optimalizácii prevádzky dynamických systémov, výrazne dopomohlo k zvýšeniu efektivity, najmä kvôli lepším predikčným vlastnostiam hybridných modelov \cite{bhutani:hybrid_modelling_opt:2006}. 
+
+Pri zostavovaní optimalizačnej úlohy môžeme vychádzať z rovnice \ref{eq:econ_opt_dyn_sys}, ktorú musíme upraviť tak, aby zohľadňovala danú štruktúru hybridného modelu (Obr. \ref{fig:hybrid_model_general}). V prípade sériového zapojenia by táto optimalizačná úloha mohla vyzerať nasledovne
+\begin{equation}
+	\begin{split}
+		\min_{x,u} &\quad \ell_e\left(x,u\right).\\
+		\text{s.t.} &\quad \dot{x} = f\left(t,x,u,\theta\right)\\
+		&\quad \theta = g(u)
+	\end{split}
+\end{equation}
+Dátový model $ g(u) $, ktorý bol vopred natrénovaný na dátach zo zariadenia, odhaduje parametre systému $ \theta $ na základe meniacej sa vstupnej veličiny $ u $. Odhadnuté parametre dopĺňajú neidentifikovaný mechanický model $ f(t,x,u,\theta) $, ktorý poskytuje údaje o stavoch $ x $ účelovej funkcii $ \ell_e\left(x,u\right) $. 
+
+Paralelné zapojenie je trošku odlišné. Jednak vychádza z predpokladu, že nominálny model, ktorý máme je už identifikovaný. Tým pádom dokážeme získať údaje o rozdieloch $ \Delta $ medzi výstupmi zo skutočného zariadenia a nominálneho modelu. Ná týchto dátach je natrénovaný dátový model $ h^{(1)}(u) $, ktorý na základe vstupných údajov $ u $ upravuje výstupy $ x $ z mechanického modelu $ f(t,x,u) $. Optimalizačnú úlohu by sme mohli sformulovať ako
+\begin{equation}
+	\begin{split}
+		\min_{x,u} &\quad \ell_e\left(\hat{x},u\right),\\
+		\text{s.t.} &\quad \dot{x} = f\left(t,x,u\right)\\
+		&\quad \hat{x} = x + \Delta\\
+		&\quad \Delta = h^{(1)}(u)
+	\end{split}
+\end{equation}
+kde $ \hat{x} $ predstavuje upravené výstupy z hybridného modelu.
+
+Sériovo--paralelná štruktúra je akousi kombináciou oboch predchádzajúcich architektúr a optimálne ustálené hodnoty $ \bar{x}^{\star}, \bar{u}^{\star} $ môžeme získať vyriešením  optimalizačnej úlohy v tvare
+\begin{equation}
+	\begin{split}
+		\min_{x,u} &\quad \ell_e\left(\hat{x},u\right).\\
+		\text{s.t.} &\quad \dot{x} = f\left(t,x,u,\theta\right)\\
+		&\quad \theta = g(u) \\
+		&\quad \hat{x} = x + \Delta\\
+		&\quad \Delta = h^{(2)}(u)
+	\end{split}
+\end{equation}
+Treba však zdôrazniť, že dátový model paralelného zapojenia $ h^{(1)} $ nie je totožný s dátovým modelom $ h^{(2)} $ kombinovaného zapojenia, pretože v tomto usporiadaní sú dáta o rozdieloch $ \Delta $ odlišné. Je to spôsobené najmä kvôli meniacim sa parametrom $ \theta $ mechanického modelu, ktoré sú odhadované druhým dátovým modelom $ g(u) $. Na druhej strane, dátový model $ g(u) $ môže byť rovnaký ako v sériovom zapojení a často aj býva rovnaký. 
