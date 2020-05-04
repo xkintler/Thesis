@@ -1,4 +1,4 @@
-\subsection{Matematické modelovanie zariadenia}
+\section{Matematické modelovanie zariadenia}
 Najjednoduchším matematickým modelom, ktorý opisuje prietokový biochemický reaktor je tzv. Monod model. Tento model je veľmi obľúbený hlavne kvôli svojej jednoduchosti. Zakladá sa na dvoch predpokladoch: \text{1)} špecifická rýchlosť rastu buniek závisí od koncentrácie substrátu a \text{2)} tvorba biomasy je spojená so spotrebou substrátu. Formulácia rovníc, ktoré popisujú materiálovú bilanciu biomasy je nasledovná
 \begin{table}[H]
 	\centering
@@ -28,11 +28,11 @@ Obe strany rovníc vydelíme objemom reaktora a označíme si pomer $ F/V = D $ 
 	&\der{s}{t} = D\left(s_{in} - s\right) - \frac{1}{Y_{x}}\mu(s)x. \label{eq:monod_subs}
 \end{align}
 
-\subsubsection{Základné mechanické modely biochemického reaktora}
+\subsection{Základné mechanické modely biochemického reaktora}
 Rovnice \eqref{eq:monod_biomas} a \eqref{eq:monod_subs} tvoria najjednoduchší opis biochemického reaktora -- Monod model, a význam jednotlivých parametrov je uvedený v Tabuľke \ref{tab:monod_params}. Avšak, tento model má množstvo nedostatkov. Nedokáže vysvetliť jednotlivé fázy rastu, ktoré sú pozorované experimentálne a to: lag-fázu, smrť buniek na základe hladovania, tvorbu produktu atď. Tieto nedostatky boli doplnené u tzv. štrukturovaných modelov. Model, ktorý berie do úvahy aj tvorbu produktu, získame doplnením Monod modelu
 \begin{align} 
-&\der{x}{t} = \left(\mu(s) - D\right)x, \\
-&\der{s}{t} = D\left(s_{in} - s\right) - \frac{1}{Y_{x}}\mu(s)x - \frac{1}{Y_{p}}\nu x, \\
+&\der{x}{t} = \left(\mu(s) - D\right)x, \label{eq:chemostat_biomass}\\
+&\der{s}{t} = D\left(s_{in} - s\right) - \frac{1}{Y_{x}}\mu(s)x - \frac{1}{Y_{p}}\nu x, \label{eq:chemostat_substrate}\\
 &\der{p}{t} = \nu x - Dp, \label{eq:monod_product}
 \end{align}
 kde $p$ predstavuje koncentráciu produktu v \si{\gram\per\liter}, $Y_{p}$ je bezrozmerový koeficient výťažnosti produktu a $\nu$ predstavuje kinetický člen rýchlosti tvorby produktu v jednotkách času napr. \si{\per\hour}. Do rovnice \eqref{eq:monod_subs} sme doplnili časť, ktorá vraví, že časť substrátu sa spotrebuje na tvorbu produktu a rovnica \eqref{eq:monod_product} predstavuje obyčajnú materiálovú bilanciu produktu. 
@@ -58,13 +58,8 @@ kde $p$ predstavuje koncentráciu produktu v \si{\gram\per\liter}, $Y_{p}$ je be
 	\end{tabular}
 \end{table}
 
-Ak by sme chceli do modelu zakomponovať tendenciu úmrtia mikroorganizmov v dôsledku príliš vysokej koncentrácie substrátu (vplyv osmotického tlaku), treba upraviť špecifickú rýchlosť rastu $\mu(s)$ tak, že bude obsahovať inhibičný člen $ K_i $, ktorého rozmer je \si{\gram\per\liter}. Špecifická rýchlosť rastu potom nadobudne tvar
+Ak by sme chceli do modelu zakomponovať tendenciu úmrtia mikroorganizmov v dôsledku príliš vysokej koncentrácie substrátu (vplyv osmotického tlaku), treba upraviť špecifickú rýchlosť rastu $\mu(s)$ tak, že bude obsahovať inhibičný člen $ K_I $, ktorého rozmer je \si{\gram\per\liter}. Špecifická rýchlosť rastu potom nadobudne tvar
 \begin{equation}
-\mu(s) = \mu_{m}\frac{s}{K_{M} + s + \frac{s^2}{K_i}}
+\mu(s) = \mu_{m}\frac{s}{K_{M} + s + \frac{s^2}{K_I}} \label{eq:spec_growth_rate_Haldane}
 \end{equation}
 a model, ktorého špecifická rýchlosť rastu má takéto vlastnosti, sa zvykne nazývať inhibičný alebo tiež Haldane model. 
-
-\subsection{Analýza matematických modelov - Dynamika, stabilita}
-
-\subsection{Optimalizačné metódy}
-\subsection{Prístupy k odhadu parametrov}

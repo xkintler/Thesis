@@ -1,0 +1,36 @@
+\section{Ekonomická optimalizácia}
+Základom každého fungujúceho ekonomického subjektu je určite správne zaobchádzanie s financiami. Avšak, podniky, ktoré sú zamerané na výrobu nejakého produktu, sa budú sústrediť najmä na efektivitu výrobného procesu resp. zariadenia. Doteraz sme uviedli niekoľko spôsobov ako možno docieliť optimálny stav zariadenia, ale už len pri samotných biochemických reaktoroch je niekoľko prístupov, ako sa môžeme na túto otázku pozerať. V prípade, že by našim výsledným produktom bola napr. biomasa (pekárenské kvasinky), určite by sme sa snažili maximalizovať výsledný objem živých organizmov. Iný prístup by sme museli zvoliť v prípade, že by našim produktom bol metabolit mikroorganizmu (napr. výroba vanilínu \cite{hansen:vanilin_biosyn:2009}) alebo by šlo o transformáciu jednej látky na inú, ako je to v prípade biologického čistenia odpadových vôd.
+
+\subsection{Prípadová štúdia}
+V tejto časti zhrnieme celú problematiku optimalizácie fiktívneho prietokového biochemického reaktora, definovaného rovnicami \eqref{eq:monod_biomas}, \eqref{eq:monod_subs} a \eqref{eq:monod_product}, ktoré reprezentujú Monod model. Nastavenie parametrov tohto matematického opisu je uvedené v tabuľke \ref{tab:case_study_monod_params}.
+
+Ako sme už vyššie uviedli, na optimalizáciu takéhoto zariadenia sa môžeme pozerať rôzne. My sme zvolili, že našim cenným produktom bude biomasa. Takže vhodnou formuláciou optimalizačnej úlohy musíme docieliť, aby sme maximalizovali produkciu biomasy, ale na druhej strane budeme požadovať, aby sme pri tom minuli čo najmenej substrátu. Ak túto vetu transformujeme na matematický opis, mohli by sme získať takúto optimalizačnú úlohu
+\begin{equation}
+	\begin{split}
+		\min_{D} &\quad D\left(1-\bar{x}\right) \\
+		\text{s.t.} &\quad \bar{x} = f(D,\bar{s})
+	\end{split}
+\end{equation}
+kde $ \bar{x} $ je ustálený stav koncentrácie biomasy a $ \bar{s} $ je ustálený stav koncentrácie substrátu. Funkcia $ f(D,\bar{s}) $ vyjadruje vzťah medzi hodnotou ustáleného stavu koncentrácie biomasy, substrátu a rýchlosti riedenia. Faktom však ostáva, že túto funkciu v reálnom svete nepoznáme. Preto je nutné dané zariadenie opísať nejakým mechanickým modelom. Pre naše účely sme zvolili Haldane model, ktorý je opísaný rovnicami \eqref{eq:chemostat_biomass}, \eqref{eq:chemostat_substrate} a \eqref{eq:monod_product}, kde špecifická rýchlosť rastu mikroorganizmov je definovaná vzťahom \eqref{eq:spec_growth_rate_Haldane}. 
+
+\begin{table}
+	\centering
+	\caption{Nastavenie parametrov Monod a Haldane modelu.}
+	\label{tab:case_study_monod_params}
+	\begin{tabular}{lll}
+		\hline
+		\textbf{Parameter} & \textbf{Symbol} & \textbf{Veľkosť} \\
+		\hline
+		Maximálna špecifická rýchlosť rastu & $\mu_{m}$ & 0.53\si{\per\hour} \\
+		Michaelisova konštanta & $K_{M}$ & 1.20\si{\gram\per\liter} \\
+		Rýchlosť tvorby produktu & $ \nu $ & 0.50\si{\per\hour} \\
+		Výťažok (biomasa) & $Y_{x}$ & 0.40\\
+		Výťažok (produkt) & $Y_{p}$ & 1.00\\
+		Objem reaktora & $V$ & 3.33\si{\liter} \\
+		Prietok substrátu/suspenzie & $F$ & 1.00\si{\liter\per\hour} \\
+		Koncentrácia substrátu na vstupe & $s_{in}$ & 20.00\si{\gram\per\liter} \\
+		\hline
+		Koeficient inhibície & $ K_{I} $ & 70.00\si{\gram\per\liter}\\
+		\hline
+	\end{tabular}
+\end{table}
