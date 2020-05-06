@@ -46,7 +46,8 @@ kde $ \lambda_k $ predstavuje hodnotu modifikátora v $ k $-tom kroku. Upravený
 \end{equation}
 Hodnota modifikátora v $ k $-tom kroku je určená na základe váhovania dvoch faktorov. Určitú časť prispievajú minulé hodnoty modifikátora $ \lambda_{k-1} $ a zvyšnú časť tvorí rozdiel v gradientoch účelových funkcii $ \Delta_{k-1} $ skutočného zariadenia a nominálneho modelu 
 \begin{equation}
-	\lambda_k = c\lambda_{k-1} + \left(1 - c\right)\Delta_{k-1},
+	\label{eq:mas_weight}
+	\lambda_k = c\lambda_{k-1} + \left(1 - c\right)\Delta_{k},
 \end{equation}
 kde $ c $ je váhový koeficient, ktorý môže nadobúdať hodnoty $ c \in \lbrace 0; 1 \rbrace $ v závislosti od toho, či chceme aby sa modifikátor menil viac alebo menej s pribúdajúcimi dátami. Samotnú premennú $ \Delta_k $ je náročné určiť správne, pretože obsahuje gradient účelovej funkcie reálneho zariadenia $ \nabla_P\ell_e(\bar{x},\bar{u}) $, ktorý mi nemáme k dispozícii a preto je nutné ho odhadnúť napr. v takejto podobe
 \begin{equation}
@@ -54,6 +55,7 @@ kde $ c $ je váhový koeficient, ktorý môže nadobúdať hodnoty $ c \in \lbr
 \end{equation} 
 Potom $ \Delta_k $ môžeme definovať ako 
 \begin{equation}
+	\label{eq:mas_correction}
 	\Delta_k = \nabla_P\ell_{e,k}(\bar{x},\bar{u}) - \nabla_N\ell_{e,k}(\bar{x},\bar{u}).
 \end{equation}
 Treba spomenúť fakt, že práve odhad gradientu účelovej funkcie skutočného zariadenia $ \nabla_P\ell_{e,k}(\bar{x},\bar{u}) $ spôsobuje najväčšie nepresnosti, najmä kvôli šumu merania. 
