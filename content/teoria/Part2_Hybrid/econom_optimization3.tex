@@ -1,0 +1,175 @@
+\section{Ekonomická optimalizácia}
+V tejto časti zhrnieme celú problematiku optimalizácie fiktívneho prietokového biochemického reaktora, definovaného rovnicami \eqref{eq:monod_biomas}, \eqref{eq:monod_subs} a \eqref{eq:monod_product}, ktoré reprezentujú Monod model. Nastavenie parametrov tohto matematického opisu je uvedené v tabuľke \ref{tab:case_study_monod_params}.
+
+Doteraz sme uviedli niekoľko spôsobov ako možno docieliť optimálny stav zariadenia, ale už len pri samotných biochemických reaktoroch je niekoľko prístupov, ako sa môžeme na túto otázku pozerať. V prípade, že by našim výsledným produktom bola napr. biomasa (pekárenské kvasinky), určite by sme sa snažili maximalizovať výsledný objem živých organizmov. Iný prístup by sme museli zvoliť v prípade, že by našim produktom bol metabolit mikroorganizmu (napr. výroba vanilínu \cite{hansen:vanilin_biosyn:2009}) alebo by šlo o transformáciu jednej látky na inú, ako je to v prípade biologického čistenia odpadových vôd. V rámci tejto diplomovej práce sme nastavili optimalizačný problém tak, aby sme maximalizovali produkciu biomasy, ale na druhej strane budeme požadovať, aby sme pri tom minuli čo najmenej substrátu. Ak túto vetu transformujeme na matematický opis, mohli by sme získať takúto optimalizačnú úlohu
+\begin{equation}
+	\label{eq:chemostat_opt1}
+	\begin{split}
+		\min_{D} &\quad D\left(1-\bar{x}\right) \\
+		\text{s.t.} &\quad \bar{x} = f(D,\bar{s})
+	\end{split}
+\end{equation}
+kde $ \bar{x} $ je ustálený stav koncentrácie biomasy a $ \bar{s} $ je ustálený stav koncentrácie substrátu. Funkcia $ f(D,\bar{s}) $ vyjadruje vzťah medzi hodnotou ustáleného stavu koncentrácie biomasy, substrátu a rýchlosti riedenia. Faktom však ostáva, že túto funkciu v reálnom svete nepoznáme. Preto je nutné dané zariadenie opísať nejakým mechanickým modelom. Pre naše účely sme zvolili Haldane model, ktorý je opísaný rovnicami \eqref{eq:chemostat_biomass}, \eqref{eq:chemostat_substrate} a \eqref{eq:monod_product}, kde špecifická rýchlosť rastu mikroorganizmov je definovaná vzťahom \eqref{eq:spec_growth_rate_Haldane}. Pre Haldane model môžeme z rovníc modelu v ustálenom stave odvodiť funkciu $ f(D,\bar{s}) $ nasledovne
+\begin{align*}
+	0 = \left(\mu(\bar{s})-D\right)\bar{x} \quad \Longrightarrow \quad &\bar{x}=0, \\
+	&\mu(\bar{s})=D.
+\end{align*}
+Z rovnice biomasy sme získali dve riešenia -- triviálne, ak koncentrácia biomasy bude v každom čase nulová; netriviálne, ak špecifická rýchlosť rastu bude rovná rýchlosti riedenia. Potom pre špecifickú rýchlosť rastu môžeme písať 
+\begin{align*}
+	&\mu(\bar{s}) = D = \mu_{m}\frac{\bar{s}}{K_{M} + \bar{s} + \frac{\bar{s}^2}{K_{I}}} \quad \Longrightarrow \\
+	&\frac{D}{K_{I}}\bar{s}^2 + (D-\mu_{m})\bar{s} + DK_{M} = 0.
+\end{align*}
+Riešením tejto kvadratickej rovnice dostaneme dve riešenia, pričom fyzikálny zmysel má iba jedno
+\begin{equation}
+	\bar{s} = -K_{I}\frac{\left(D-\mu_{m}\right) + \sqrt{\left(D-\mu_{m}\right)^2 - 4\frac{D^2}{K_{I}}K_{M}}}{2D}. \label{eq:haldane_subs_ss1}
+\end{equation}
+Rovnicu \eqref{eq:chemostat_substrate} využijeme na odvodenie ustáleného stavu biomasy
+\begin{equation}
+	\begin{split}
+		&0 = D\left(s_{in}-\bar{s}\right) - \left(\frac{1}{Y_{x}}D + \frac{1}{Y_{p}}\nu\right)\bar{x} \quad \Longrightarrow \quad
+		\bar{x} = \frac{D\left(s_{in}-\bar{s}\right)}{\frac{1}{Y_{x}}D + \frac{1}{Y_{x}}\nu}. \label{eq:haldane_biomass_ss1}
+	\end{split}
+\end{equation}
+
+Všimnime si, že prípustnosť riešenia rovnice \eqref{eq:haldane_biomass_ss} je do istej miery ovplyvnené samotnou odmocninou, čo nám môže pri riešení optimalizačnej úlohy \eqref{eq:chemostat_opt} robiť problémy. Aby sme pokryli aspoň interval riešení Monod modelu upravíme optimalizačnú úlohu \eqref{eq:chemostat_opt} do tvaru
+\begin{equation}
+	\begin{split}
+		\min_{D} &\quad D\left(1-\alpha\bar{x}\right), \\
+		\text{s.t.} &\quad \bar{x} = \frac{D\left(s_{in}-\bar{s}\right)}{\frac{1}{Y_{x}}D + \frac{1}{Y_{x}}\nu} \\
+		&\quad \bar{s} = -K_{I}\frac{\left(D-\mu_{m}\right) + \sqrt{\left(D-\mu_{m}\right)^2 - 4\frac{D^2}{K_{I}}K_{M}}}{2D}
+	\end{split}
+	\label{eq:chemostat_opt_w_ss1}
+\end{equation}
+kde sme do samotnej účelovej funkcie pridali koeficient $ \alpha $, ktorého veľkosť sme empiricky zvolili na $ \alpha = 0.5 $ a substituovali sme funkciu $ \bar{x} = f(D,\bar{s}) $. 
+
+Do tohto momentu máme zadefinovanú optimalizačnú úlohu spolu s nominálnym modelom, ktorého parametre ešte nemáme určené. V časti \aps{Optimalizácia dynamických systémov} sme navrhli niekoľko metód, ktorými môžeme vyriešiť optimalizačnú problematiku \eqref{eq:chemostat_opt_w_ss} -- dvojkroková optimalizácia, schéma úpravy modifikátora a využitím hybridného modelovania. V závislosti od použitej metódy, rôzne pristupujeme k parametrom nominálneho modelu. Dvojkroková optimalizácia odhaduje parametre modelu tak, aby v niekoľkých iteráciách, zmenou parametrov, dosiahla optimum zariadenia. Ale schéma úpravy modifikátora a hybridné modely upravujú účelovú funkciu kvôli rozdielu medzi nesprávnym nominálnym mechanickým modelom a skutočným zariadením. Preto sme pri týchto dvoch metódach zvolili parametre Haldane modelu a koeficient $ \alpha $ tak, aby optimá zariadenia a nominálneho modelu boli čo najďalej od seba, ale aby sme boli schopný nájsť riešenie pomocou rovnice \eqref{eq:chemostat_opt_w_ss}. Parametre nominálneho modelu sú tak isto uvedené v tabuľke \ref{tab:case_study_monod_params}.
+
+\begin{table}
+	\centering
+	\caption{Nastavenie parametrov Monod a Haldane modelu.}
+	\label{tab:case_study_monod_params1}
+	\begin{tabular}{lll}
+		\hline
+		\textbf{Parameter} & \textbf{Symbol} & \textbf{Veľkosť} \\
+		\hline
+		Maximálna špecifická rýchlosť rastu & $\mu_{m}$ & 0.53\si{\per\hour} \\
+		Michaelisova konštanta & $K_{M}$ & 1.20\si{\gram\per\liter} \\
+		Rýchlosť tvorby produktu & $ \nu $ & 0.50\si{\per\hour} \\
+		Výťažok (biomasa) & $Y_{x}$ & 0.40\\
+		Výťažok (produkt) & $Y_{p}$ & 1.00\\
+		Objem reaktora & $V$ & 3.33\si{\liter} \\
+		Prietok substrátu/suspenzie & $F$ & 1.00\si{\liter\per\hour} \\
+		Koncentrácia substrátu na vstupe & $s_{in}$ & 20.00\si{\gram\per\liter} \\
+		Koeficient inhibície & $ K_{I} $ & 70.00\si{\gram\per\liter}\\
+		\hline
+	\end{tabular}
+\end{table}
+
+Skôr ako uvedieme jednotlivé prístupy k optimalizácii biochemického reaktora, mali by zdôvodniť, aké dáta budeme využívať a prečo. Podľa toho, ako je definovaný Monod model, vieme na základe jedného vstupu (rýchlosť riedenia $ D $), získať tri výstupy (koncentrácie biomasy $ x $, substrátu $ s $ a produktu $ p $). V prípade, že objem reaktora je konštantný a prítok substrátu je rovný odtoku suspenzie, vstupnou veličinou môže byť prietok $ F $, ktorý sa meria jednoducho. Z výstupných prúdov sa bežne meria koncentrácia substrátu $ s $. Jednak máme k dispozícii viac možností ako ju merať a nebýva zaťažená veľkou chybou merania. Teoreticky by sme vedeli takto pristupovať aj k prúdu produktov, ale produkty bývajú často veľmi špecifické zlúčeniny, ktorých koncentrácia by sa musela stanovovať buďto špeciálnymi analytickými metódami, alebo drahými analyzátormi. Najzložitejšie však je presne určiť koncentráciu biomasy. I keď metód by bolo dostatok (napr. rôzne spektro--fotometrické stanovenia alebo pomocou B\"urkerovej komôrky), výsledná koncentrácia tohto prúdu by mala výrazne väčšiu fluktuáciu v porovnaní s predchádzajúcimi. Takže výsledkom je, že primárne sa zameriame na namerané údaje o koncentrácii substrátu, ale v niektorých metódach využijeme aj informácie o koncentrácii biomasy s tou nevýhodou, že budú viac zašumené.
+
+\textbf{Dvojkroková optimalizácia.} 
+V prvej fáze sa zameriame na odhad parametrov modelu. Máme k dispozícii niekoľko parametrov, ktoré definujú nominálny model, ale väčšinu z nich dokážeme určiť meraním ako napr. jednotlivé výťažky $ Y_{x}, Y_{p} $, rýchlosť tvorby produktu $ \nu $, koncentráciu substrátu na vstupe $ s_{in} $. Odhadovať budeme kinetické členy maximálnu špecifickú rýchlosť rastu $ \mu_{m} $, Michaelisovu konštantu $ K_{M} $ a koeficient inhibície $ K_{I} $. K identifikácii týchto parametrov môžeme pristupovať dvoma spôsobmi a to na základe nameraných údajov.
+
+V prípade, že disponujeme dátami o koncentrácii biomasy aj substrátu, môžeme optimalizačný problém odhadu parametrov sformulovať nasledovne
+\begin{equation}
+	\begin{split}
+		\min_{\mu_{m},K_{M}} \quad &\sum_{i=1}^{N} \left(\Delta_{i} - \left(\mu(\tilde{s}_{i}) - D\right)\tilde{x}_{i}\right)^2, \\
+		\text{s.t.} \quad &\Delta_{i} = \frac{\tilde{x}_{i} - \tilde{x}_{i-1}}{t_{i} - t_{i-1}} \\
+		\quad &\mu(\tilde{s}_{i})=\mu_{m}\frac{\tilde{s}_{i}}{K_{M} + \tilde{s}_{i} + \frac{\tilde{s}_{i}^2}{K_{I}}}
+	\end{split}
+\end{equation} 
+pre všetky $ i \in \lbrace 1,2,3,\dots,N \rbrace $, kde $ \tilde{x}_{i} $ predstavuje nameranú hodnotu koncentrácie biomasy v $ i $--tom kroku v čase $ t_i $, $ \tilde{s}_{i} $ substrátu a 
+$ \Delta_{i} $ predstavuje spätnú diferenciu v $ i $--tom kroku. Táto metóda aproximuje údaje o derivácii časového priebehu koncentrácie biomasy. Najväčšou prekážkou pre takýto prístup je samotný šum merania a čím väčší bude jeho rozptyl, tým ďalej budeme od skutočnej derivácie.
+
+Druhý prístup odhaduje parametre samotných diferenciálnych rovníc modelu na základe nameraných údajov koncentrácie substrátu $ \tilde{s} $. Zatiaľ čo návrh optimalizačného problému sa príliš nezmení, zložitosť výpočtu sa výrazne zvýši. V tomto prípade je nutné, v každom nameranom bode, niekoľkokrát numericky vyhodnotiť priebehy koncentrácie biomasy aj substrátu a porovnať ich s nameraným signálom  tak, aby sme získali optimálne riešenie. Túto problematiku by sme mohli sformulovať následovne
+\begin{equation}
+	\begin{split}
+		\min_{\mu_{m},K_{M}} \quad & \sum_{i=1}^{N} \left(\tilde{s}_{i}-s_{i}\right)^2, \\
+		\textrm{s.t.} \quad & \dot{s} = D(s_{in}-s)-\frac{1}{Y_x}\mu(s)x-\frac{1}{Y_p}\nu x \\
+		& \dot{x} = (\mu(s)-D)x \\
+		& \mu(s)=\mu_{m}\frac{s}{K_{M} + s + \frac{s^2}{K_{I}}} \\
+		& s(0) = s_0 \\
+		& x(0) = x_0
+	\end{split}
+\end{equation}
+pre všetky $ i \in \lbrace 1,2,3,\dots,N \rbrace $, kde $ s_{i} $ je koncentrácia substrátu v $ i $--tom kroku vypočítaná na základe nominálneho modelu.
+
+V druhej fáze na základe identifikovaného nominálneho modelu určíme optimálny prietok v danom kroku podľa rovnice \eqref{eq:chemostat_opt_w_ss}. Prvú a druhú fázu budeme cyklicky opakovať na pribúdajúcich dátach, až kým neskonvergujeme k skutočnému optimálnemu prietoku zariadenia.
+
+\textbf{Schéma úpravy modifikátora.}
+Základ tejto metódy tvorí nominálny model, v našom prípade to bude Haldane model, ktorého parametre sú uvedené v tabuľke \ref{tab:case_study_monod_params}. Pomocou nameraných údajov o ustálených stavoch koncentrácie biomasy $ \tilde{x} $ zariadenia budeme upravovať gradient účelovej funkcie \eqref{eq:chemostat_opt_w_ss} nasledovným spôsobom.
+
+Začneme tým, že si označíme našu účelovú funkciu v $ k $--tom kroku resp. iterácii ako
+\begin{equation}
+	\label{eq:chemostat_cost_fun}
+	J_{k} = D_{k}\left(1-\alpha\bar{x}_{k}\right).
+\end{equation}
+Keďže nepoznáme matematický opis skutočného zariadenia a potrebujeme získať informáciu o gradiente jeho účelovej funkcie $ \nabla_{P}J_{k} $, musíme ho odhadnúť pomocou spätnej diferencie
+\begin{equation}
+	\nabla_{P}J_{k} = \frac{J_{k} - J_{k-1}}{D_{k} - D_{k-1}} = \frac{\left(D-D\alpha\tilde{x}\right)_{k} - \left(D-D\alpha\tilde{x}\right)_{k-1}}{D_{k} - D_{k-1}}
+\end{equation}
+kde $ \tilde{x} $ sú namerané údaje ustáleného stavu koncentrácie biomasy v $ k $--tom resp. $ k-1 $ kroku pri príslušnej zrieďovacej rýchlosti $ D_{k} $ a $ D_{k-1} $. Úprava modifikátora, ako to definuje rovnica \eqref{eq:mas_correction}, je daná rozdielom gradientov účelových funkcií zariadenia $ \nabla_{P}J_{k} $ a nominálneho modelu $ \nabla_{N}J_{k} $ 
+\begin{equation}
+	\Delta_k = \nabla_{P}J_{k} - \nabla_{N}J_{k}.
+\end{equation}
+Gradient účelovej funkcie nominálneho modelu získame deriváciou rovnice \eqref{eq:chemostat_cost_fun} podľa rýchlosti riedenia $ D $
+\begin{align}
+	&\nabla_{N}J = 1 - \alpha\left(\bar{x}+D\pder{\bar{x}}{D}\right), \text{kde}\\
+	&\pder{\bar{x}}{D} = \frac{\left(\frac{D}{Y_{x}} + \frac{\nu}{Y_{p}}\right)\left(\bar{s}-s_{in}+D\pder{\bar{s}}{D}\right) - \frac{D\left(\bar{s}-s_{in}\right)}{Y_{x}}}{\left(\frac{D}{Y_{x}} + \frac{\nu}{Y_{p}}\right)^2},	\\
+	&\pder{\bar{s}}{D} = f(D,K_{M},K_{I},\mu_{m}),
+\end{align}
+kde $ \pder{\bar{s}}{D} $ sme nechali vo všeobecnom tvare kvôli zložitosti výrazu a ustálené hodnoty koncentrácie biomasy a substrátu sú definované vzťahmi \eqref{eq:haldane_biomass_ss} a \eqref{eq:haldane_subs_ss}. Je zrejmé, že gradient tejto funkcie $ \nabla_{N}J_{k} $ musíme vypočítať na základe rovnakých údajov $ D_k $ v kroku $ k $.
+
+Problematickým faktorom pri odhade gradientu účelovej funkcie zariadenia je šum merania, ktorý bude vždy prítomný. Preto aktuálnu hodnotu modifikátora v $ k $--tom kroku $ \lambda_k $ nastavíme vhodným váhovaním minulých hodnôt modifikátora $ \lambda_{k-1} $ a aktuálnej hodnoty rozdielu $ \Delta_{k} $ tak ako udáva rovnica \eqref{eq:mas_weight}
+\begin{equation*}
+	\lambda_k = c\lambda_{k-1} + \left(1 - c\right)\Delta_{k},
+\end{equation*}
+kde $ c $ je váhový koeficient. Takto vypočítaná hodnota modifikátora $ \lambda_k $ sa pripočíta ku gradientu účelovej funkcie nominálneho modelu $ \nabla_{N}J $, kde po integrácii dostaneme
+\begin{equation}
+	J_{k} = D\left(1-\alpha\bar{x}\right) + D\lambda_k.
+\end{equation}
+Optimalizačnú úlohu potom zostavíme na základe tejto upravenej rovnice
+\begin{equation}
+	\begin{split}
+		\min_{D} &\quad D\left(1-\alpha\bar{x}\right) + D\lambda_k, \\
+		\text{s.t.} &\quad \bar{x} = \frac{D\left(s_{in}-\bar{s}\right)}{\frac{1}{Y_{x}}D + \frac{1}{Y_{x}}\nu} \\
+		&\quad \bar{s} = -K_{I}\frac{\left(D-\mu_{m}\right) + \sqrt{\left(D-\mu_{m}\right)^2 - 4\frac{D^2}{K_{I}}K_{M}}}{2D}
+	\end{split}
+\end{equation}
+ktorou získame optimálnu rýchlosť riedenia $ D $ resp. prietok $ F $ v príslušnej iterácii. Na základe ďalších hodnôt o ustálených stavoch aktualizujeme hodnotu modifikátora $ \lambda_k $, ktorá v najideálnejšom prípade konverguje k hodnote
+\begin{equation}
+	\lambda_k = \nabla_{P}J\left(D^{\star}\right) - \nabla_{N}J\left(D^{\star}\right).
+\end{equation} 
+Ak modifikátor nadobudne túto hodnotu, dosiahli sme optimálny chod zariadenia pri $ D^{\star} $. Treba pripomenúť, že rýchlosť konvergencie, ako aj jej kvalita, záležia od voľby váhového koeficientu $ c $. Pomalá konvergencia nemusí byť vhodná pre procesy, kde dosiahnutie ustáleného stavu trvá hodiny až dni, ale je presná. Na druhej strane rýchla konvergencia kmitá okolo žiadanej hodnoty a často aj s veľkou amplitúdou.
+
+\textbf{Použitie hybridných modelov.}
+V rámci hybridného modelovania môžeme k optimalizácii biochemického reaktora pristupovať rôzne, najmä preto, lebo hybridné modely sú veľmi flexibilné. My si ukážeme, ako zostrojiť túto optimalizačnú úlohu pri paralelnej štruktúre hybridného modelu.
+
+Princíp fungovania hybridného modelu bude nasledovný. Dátový model, ktorý bude natrénovaný na údajoch o rozdiely v koncentrácii biomasy alebo substrátu medzi mechanickým modelom a skutočným zariadením, bude upravovať hodnoty ustálených stavov v účelovej funkcii \eqref{eq:chemostat_opt_w_ss}. Pričom, mechanický model ostáva rovnaký, ako tomu bolo v prípade schémy úpravy modifikátora. Teda budeme používať Haldane model, ktorého nastavenie uvádza tabuľka \ref{tab:case_study_monod_params}. Dátovú časť budú definovať buď FIR, alebo ARX model a na ich identifikáciu využijeme metódu garantovaného odhadu parametrov. 
+
+Teraz si ukážeme, ako by sme postupovali v prípade, že dokážeme merať iba koncentráciu substrátu. Rozdiel v koncentrácii $ \Delta_{s} $ medzi nominálnym modelom $ s $ a zariadením $ \tilde{s} $ vypočítame ako
+\begin{equation}
+	\Delta_{s} = \tilde{s} - s.
+\end{equation}
+Tieto údaje využijeme na identifikáciu dátového modelu pomocou GOP. To znamená, že najskôr určíme najjednoduchšiu štruktúru resp. minimálny rád modelu, ktorý vyhovuje podmienke GOP a pre túto štruktúru spravíme intervalový odhad parametrov. V prípade, že by náš dátový model bol FIR model, môžeme identifikáciu GOP zhrnúť rovnicami \eqref{eq:gpe_fir_min_rad} a \eqref{eq:gpe_fir_param_est}. Ak by šlo o ARX model, ten dokážeme identifikovať pomocou rovníc \eqref{eq:gpe_arx_min_rad} a \eqref{eq:gpe_arx_param_est}. V tomto momente môžeme využiť dátové modely na korekciu účelovej funkcie v tvare
+\begin{equation}
+	\begin{split}
+		\min_{D} &\quad D\left(1-\alpha\bar{x}\right), \\
+		\text{s.t.} &\quad \bar{x} = \frac{D\left(s_{in}-s_{corr}\right)}{\frac{1}{Y_{x}}D + \frac{1}{Y_{x}}\nu} \\
+		&\quad s_{corr} = \bar{\Delta}_{s}(D) + \bar{s}\\
+		&\quad \bar{s} = -K_{I}\frac{\left(D-\mu_{m}\right) + \sqrt{\left(D-\mu_{m}\right)^2 - 4\frac{D^2}{K_{I}}K_{M}}}{2D}
+	\end{split}
+\end{equation}
+kde $ \bar{\Delta}_{s}(D) $ je ustálený stav dátového modelu a $ \bar{x}, \bar{s} $ sú ustálené stavy z mechanického modelu. Ak by sme chceli vytvoriť hybridný model na báze merania koncentrácie biomasy, princíp by bol taký istý a optimalizačnú úlohu by sme mohli sformulovať v tvare
+\begin{equation}
+	\begin{split}
+		\min_{D} &\quad D\left(1-\alpha\left(\bar{x}+\bar{\Delta}_{x}(D)\right)\right), \\
+		\text{s.t.} &\quad \bar{x} = \frac{D\left(s_{in}-\bar{s}\right)}{\frac{1}{Y_{x}}D + \frac{1}{Y_{x}}\nu} \\
+		&\quad \bar{s} = -K_{I}\frac{\left(D-\mu_{m}\right) + \sqrt{\left(D-\mu_{m}\right)^2 - 4\frac{D^2}{K_{I}}K_{M}}}{2D}
+	\end{split}
+\end{equation}
+kde $ \bar{\Delta}_{x}(D) $ predstavuje ustálený stav dátového modelu natrénovaného na dátach 
+\begin{equation}
+	\Delta_{x} = \tilde{x} - x.
+\end{equation}
+Výhodou hybridných modelov je, že ...
