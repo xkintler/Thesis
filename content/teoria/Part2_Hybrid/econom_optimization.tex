@@ -1,7 +1,9 @@
 \section{Ekonomická optimalizácia}
 V tejto časti zhrnieme hlavný cieľ tejto práce a to optimalizáciu prietokového biochemického reaktora pomocou hybridného modelovania s využitím metódy garantovaného odhadu parametrov. Ukážeme, na akom princípe bude takýto hybridný model fungovať a porovnáme ho s inými metódami, ktoré sa tak isto vedia vysporiadať s úlohou optimalizácie zariadenia. Najskôr, však potrebujeme zadefinovať problematiku.
 
-Majme fiktívne zariadenie prietokového biochemického reaktora, ktoré vieme simulovať Monod modelom. Parametre tohto modelu, ako aj ich veľkosť, sú uvedené v Tabuľke \ref{tab:case_study_monod_params}. Našim cenným produktom bude samotná biomasa (napr. pekárenské droždie), takže sa budeme snažiť maximalizovať produkciu biomasy, ale na druhej strane budeme požadovať, aby sme pri tom minuli čo najmenej substrátu. Ak túto vetu transformujeme na matematický opis, mohli by sme získať takúto optimalizačnú úlohu
+Majme fiktívne zariadenie prietokového biochemického reaktora, ktoré vieme simulovať Monod modelom. Parametre tohto modelu, ako aj ich veľkosť, sú uvedené v Tabuľke \ref{tab:case_study_monod_params}. Výstupy, ktoré vieme merať zo zariadenia sú zaťažené chybou merania. Chyba merania má uniformné rozdelenie a v prípade koncentrácie biomasy bude rozptyl chyby $ W_{x} = 0.05\si{\gram\per\liter} $ a pre koncentráciu substrátu $ W_{s} = 0.025\si{\gram\per\liter} $.
+
+Našim cenným produktom bude samotná biomasa (napr. pekárenské droždie), takže sa budeme snažiť maximalizovať produkciu biomasy, ale na druhej strane budeme požadovať, aby sme pri tom minuli čo najmenej substrátu. Ak túto vetu transformujeme na matematický opis, mohli by sme získať takúto optimalizačnú úlohu
 \begin{equation}
 	\label{eq:chemostat_opt_general}
 	\begin{split}
@@ -70,8 +72,7 @@ Keďže už vieme aký predpis má funkcia $ f(D,\bar{s}) $, môžeme optimaliza
 \end{equation}
 Kvôli problémom s definičným oborom účelovej funkcie Haldane modelu (viď rovnicu \eqref{eq:haldane_subs_ss}), sme museli pridať do účelovej funkcie koeficient $ \alpha $, ktorého veľkosť sme empiricky zvolili rovný $ \alpha = 0.5 $. Toto nám umožnilo rozšíriť definičný obor aspoň po oblasť optimálnej hodnoty Monod modelu.
 
-Treba zdôrazniť, že správanie takto nastaveného Haldane modelu je naprosto odlišné od nášho zariadenia, pretože za určitých podmienok sa prejavuje inhibícia v dôsledku vysokej koncentrácie substrátu, a preto bude mať optimum účelovej funkcie niekde inde ako naše zariadenie simulované Monod modelom, ako to vidno na Obr. \ref{fig:cost_fun_comparison}. To znamená, že ak by sme sa riadili iba týmto nepresným mechanickým modelom, naše zariadenie by vôbec nepracovalo najefektívnejšie ako to je len možné. Z tohto dôvodu sa budeme snažiť navrhnúť hybridný model tak, aby dokázal vyrovnať rozdiel medzi nominálnym modelom a zariadením. Vhodnou štruktúrou hybridného modelu na riešenie tejto problematiky je paralelné zapojenie.
-
+Treba zdôrazniť, že správanie takto nastaveného Haldane modelu je naprosto odlišné od nášho zariadenia, pretože za určitých podmienok sa prejavuje inhibícia v dôsledku vysokej koncentrácie substrátu, a preto bude mať optimum účelovej funkcie niekde inde ako naše zariadenie simulované Monod modelom, ako to vidno na Obr. \ref{fig:cost_fun_comparison}. To znamená, že ak by sme sa riadili iba týmto nepresným mechanickým modelom, naše zariadenie by vôbec nepracovalo najefektívnejšie ako to je len možné. Z tohto dôvodu sa budeme snažiť navrhnúť hybridný model tak, aby dokázal vyrovnať rozdiel medzi nominálnym modelom a zariadením. 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{images/cost_fun_comparison}
@@ -79,13 +80,43 @@ Treba zdôrazniť, že správanie takto nastaveného Haldane modelu je naprosto 
 	\label{fig:cost_fun_comparison}
 \end{figure}
 
-\textbf{Použitie hybridných modelov.} Na začiatku treba spomenúť, že ide o iteračnú metódu, i keď hybridné modely majú tú výhodu, že dátovú časť by sme vedeli natrénovať na údajoch zo zariadenia aj bez iteračného prístupu, ale nemali by sme zaručenú úspešnosť výsledku. 
+\textbf{Trénovanie dátových modelov.} Dátové modely predstavujú najdôležitejšiu časť hybridných modelov, pretože od nich závisí kvalita finálneho modelu. Dátové modely FIR a ARX identifikujeme pomocou metódy garantovaného odhadu parametrov (GOP) a tento proces rozdelíme na dve časti. V prvej časti sa budeme zaoberať problematikou určenia vhodného rádu modelu a v druhej časti odhadu parametrov.
 
-Princíp optimalizácie demonštrujeme na situácii, keď dokážeme merať iba koncentráciu substrátu. Z ustáleného stavu, spravíme skokovú zmenu v rýchlosti zrieďovania $ D $, v prípade zariadenia aj modelu. Na základe rozdielu $ \Delta_{s} $ týchto dát
+Pred samotnou identifikáciou potrebujeme upraviť namerané dáta, ktoré získame skokovou zmenou v rýchlosti riedenia $ D $ do tvaru 
 \begin{equation}
 	\Delta_{s} = \tilde{s} - s,
+\end{equation} 
+ktorý vyjadruje rozdiel nameraných údajov koncentrácie substrátu zariadenia $ \tilde{s} $ a nominálneho modelu $ s $. Netreba však zabudnúť, že väčšinou sa robieva skoková zmena z ustáleného stavu a preto treba od nameraných vstupno--výstupných údajov odpočítať ich počiatočné ustálené stavy.
+
+Pri určení minimálneho rádu FIR modelu vychádzame z rovnice \eqref{eq:gpe_fir_min_rad}, ktorú upravíme do nasledujúceho tvaru
+\begin{equation}
+	\begin{split}
+		& \min_{B \in \left[ b_{1}, b_{2}, \dots, b_{n_b} \right]} \quad 0, \\
+		& \qquad \quad \text{s.t.} \quad -\delta_{s} \leq \Delta_{s} - \hat{\Delta}_{s} \leq \delta_{s}
+		\end{split}
+	\label{eq:fir_min_rad_sub}
+\end{equation} 
+kde $ \hat{\Delta}_{s} $ predstavuje odhadnuté výstupy rozdielu koncentrácie substrátu FIR modelom a $ \delta_{s} $ je chyba modelu.
+
+Garantovaným odhadom parametrov v ďalšej časti identifikácie získame intervalové hodnoty parametrov, ktoré potrebujeme na posúdenie kvality modelu minimálneho radu a modelov vyšších rádov. Intervalové určenie parametrov získame riešením modifikovanej optimalizačnej úlohy \eqref{eq:gpe_fir_param_est} ako 
+\begin{equation}
+	\begin{split}
+		\left[ \ubar{b}_i, \bar{b}_i \right] = \min_{B \in \left[ \ubar{b}, \bar{b} \right]} / &\max_{B \in \left[ \ubar{b}, \bar{b} \right]} \quad b_i,\\
+		& \quad \text{s.t.} \qquad  \quad -\delta_{s} \leq \Delta_{s} - \hat{\Delta}_{s} \leq \delta_{s}
+	\end{split}
+\label{eq:fir_param_est_sub}
 \end{equation}
-kde $ \tilde{s} $ sú údaje získané zo zariadenia a $ s $ predstavuje údaje z nominálneho modelu, identifikujeme dátový model pomocou metódy GOP. V prípade, že by našim dátovým modelom bol FIR, môžeme využiť rovnice \eqref{eq:gpe_fir_min_rad} a \eqref{eq:gpe_fir_param_est}. ARX model by sme mohli identifikovať pomocou \eqref{eq:gpe_arx_min_rad} a \eqref{eq:gpe_arx_param_est}. Takto natrénovaný dátový model využijeme na korekciu ustáleného stavu substrátu nominálneho modelu v optimalizačnej úlohe \eqref{eq:chemostat_opt_w_ss}. Po úprave by sme ju mohli formulovať nasledovne
+pre všetky $ i = 1, 2, \dots, n_b $.
+
+Teraz by sme mali zhodnotiť, či je FIR model minimálneho rádu vhodný na opis nameraných údajov a ho porovnať s modelmi vyššieho rádu. Na tento účel využijeme Pareto front, ktorý bude dávať do pomeru dve vlastnosti modelu a to sú presnosť odhadu a maximálny rozptyl odhadu. Presnosť odhadu vyjadruje vzdialenosť výstupu modelu od nameranej hodnoty a maximálny rozptyl odhadu predstavuje maximálnu vzdialenosť výstupu modelu od jeho maximálnej resp. minimálnej realizácie. Výsledný model by mal byť vhodným kompromisom medzi oboma vlastnosťami. Treba si však uvedomiť, že tieto vlastnosti sú v nepriamej úmere, takže ak by sme chceli zlepšiť presnosť odhadu, zhoršili by sme tým maximálny rozptyl odhadu. A našim cieľom je jednak dosiahnuť čo najlepšiu presnosť modelu (príliš veľká presnosť odhadu znamená, že dátový model odhaduje šum merania) a pri tom mať čo najmenší maximálny rozptyl odhadu, pretože ten určuje šírku garantovanej oblasti, ktorá zaručuje, že najlepšie riešenie sa bude nachádzať vo vnútri.
+
+Týmto sme ukončili identifikáciu FIR modelu. V prípade, že by sme identifikovali FIR model na dátach rozdielov koncentrácie biomasy $ \Delta_{x} $, budeme postupovať tak isto ako v prípade substrátu.
+
+Problematika identifikácie ARX modelu na dátach, ktoré dokážeme získať z biochemického reaktora, je ekvivalentná s problematikou identifikácie FIR modelov s menšími rozdielmi v zadaní optimalizačnej úlohy. Z tohto dôvodu iba uvedieme, že určenie minimálneho rádu bude prebiehať na základe optimalizačnej úlohy \eqref{eq:gpe_arx_min_rad} a intervalový odhad parametrov získame podľa \eqref{eq:gpe_arx_param_est}. Treba si však uvedomiť, že výstupy z modelu budú teraz vyjadrovať rozdiel koncentrácií substrátu $ \Delta_{s} $ resp. biomasy $ \Delta_{x} $ a chyba modelu bude definovaná ako $ \delta_{s} $ resp. $ \delta_{x} $.
+
+\textbf{Použitie hybridných modelov.} Na začiatku treba spomenúť, že ide o iteračnú metódu, i keď hybridné modely majú tú výhodu, že dátovú časť by sme vedeli natrénovať na údajoch zo zariadenia aj bez iteračného prístupu, ale nemali by sme zaručenú úspešnosť výsledku. Vhodnou štruktúrou hybridného modelu na riešenie tejto problematiky je paralelné zapojenie.
+
+Princíp optimalizácie demonštrujeme na situácii, keď dokážeme merať iba koncentráciu substrátu. Z ustáleného stavu, spravíme skokovú zmenu v rýchlosti zrieďovania $ D $ a na nameraných údajoch $ \Delta_{s} $ identifikujeme dátový model. Takto natrénovaný dátový model využijeme na korekciu ustáleného stavu substrátu nominálneho modelu v optimalizačnej úlohe \eqref{eq:chemostat_opt_w_ss}. Po úprave by sme ju mohli formulovať nasledovne
 \begin{equation}
 \label{eq:hybrid_opt_subs}
 	\begin{split}
@@ -118,7 +149,7 @@ kde $ \tilde{x} $ sú namerané údaje zo zariadenia a $ x $ sú dáta z nominá
 \end{equation}
 kde $ \bar{\Delta}_{x}(D) $ predstavuje ustálený stav dátového modelu.
 
-Avšak, medzi dátami o koncentrácii substrátu a biomasy je kvalitatívny rozdiel, a tým je vplyv šumu merania. Zatiaľ čo, meranie koncentrácie substrátu nebýva zaťažené veľkou chybou merania, koncentrácia biomasy má výrazne vyššiu fluktuáciu. Preto sa najčastejšie z výstupných prúdov meria koncentrácia substrátu. 
+Avšak, medzi dátami koncentrácie substrátu a biomasy je kvalitatívny rozdiel, a tým je vplyv šumu merania. Zatiaľ čo, meranie koncentrácie substrátu nebýva zaťažené veľkou chybou merania, koncentrácia biomasy má výrazne vyššiu fluktuáciu. Preto sa najčastejšie z výstupných prúdov meria koncentrácia substrátu. 
 
 Aby sme vedeli zhodnotiť kvalitu prístupu k optimalizácii nášho zariadenia použitím hybridných modelov, porovnáme tento prístup s ďalšími dvoma metódami. Sú nimi dvojkroková optimalizácia a schéma úpravy modifikátora. Oba tieto prístupy patria k iteračným metódam.
 
