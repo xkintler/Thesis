@@ -1,5 +1,6 @@
 \section{Matematické modelovanie zariadenia}
 Najjednoduchším matematickým modelom, ktorý opisuje prietokový biochemický reaktor je tzv. Monod model. Tento model je veľmi obľúbený hlavne kvôli svojej jednoduchosti. Zakladá sa na dvoch predpokladoch: \text{1)} špecifická rýchlosť rastu buniek závisí od koncentrácie substrátu a \text{2)} tvorba biomasy je spojená so spotrebou substrátu. Formulácia rovníc, ktoré popisujú materiálovú bilanciu biomasy je nasledovná
+% RP: Ja by som toto riesil skor cez rovnicove prostredia (pride mi ze za table je prilis velka medzera). Nebolo by zle ani jednotlive cleny ozatvorkovat na zlepsenie citatelnosti.
 \begin{table}[H]
 	\centering
 	\begin{tabular}{ccccc}
@@ -18,6 +19,8 @@ a pre materiálovú bilanciu substrátu platí:
 	\end{tabular}
 \end{table}
 Ak uvažujeme, že objem reaktora sa nemení a prítok substrátu sa rovná odtoku suspenzie, potom môžme písať
+% RP: Vsetky premenne treba definovat. V? \mu? Y? Nestaci ak sa toto objavi zrazu o 5 riadkov nizsie.
+% RP: Zisiel by sa tu aj odkaz na literaturu.
 \begin{align}
 	&V\left(\der{x}{t}\right) = V\mu(s)x - Fx, \label{eq:tmp_monod_biomass} \\
 	&V\left(\der{s}{t}\right) = Fs_{in} - Fs - V\frac{1}{Y_{x}}\mu(s)x. \label{eq:tmp_monod_subs}

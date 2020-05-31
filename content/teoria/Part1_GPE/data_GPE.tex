@@ -1,21 +1,27 @@
 \chapter{Garantovaný odhad parametrov}
-V predošlej časti sme spomenuli niekoľko metód na odhad parametrov a každá si so sebou nesie určité nároky na namerané údaje. Napríklad taká metóda najmenších štvorcov predpokladá, že šum merania má normálne rozdelenie. Čo sa stane, ak tento predpoklad alebo ďalšie, ktoré sme uviedli v časti \aps{Požadavky na odhad parametrov}, nebude dodržaný ? Je zrejmé, že to povedie k nesprávnym výsledkom. 
+V predošlej časti sme spomenuli niekoľko metód na odhad parametrov a každá si so sebou nesie určité nároky na namerané údaje. Napríklad taká metóda najmenších štvorcov predpokladá, že šum merania má normálne rozdelenie. Čo sa stane, ak tento predpoklad alebo ďalšie, ktoré sme uviedli v časti \aps{Požadavky na odhad parametrov}, nebude dodržaný? Je zrejmé, že to povedie k nesprávnym výsledkom. 
 
-Zostáva tu však ešte jeden problém, ktorý je omnoho zložitejší ako samotný odhad parametrov, a tým je voľba štruktúry dátového modelu. Pomocou metódy najmenších štvorcov môžeme odhadovať parametre modelu ľubovoľnej štruktúry, v prípade že je zabezpečená linearita. Ale ako zistíme, či daný model nezanedbáva dôležitú časť dynamiky procesu alebo na druhej strane, či už neaproximuje šum merania ? Riešenie môže ponúknuť práve metóda garantovaného odhadu parametrov.
+Zostáva tu však ešte jeden problém, ktorý je omnoho zložitejší ako samotný odhad parametrov, a tým je voľba štruktúry dátového modelu. Pomocou metódy najmenších štvorcov môžeme odhadovať parametre modelu ľubovoľnej štruktúry, v prípade že je zabezpečená linearita. Ale ako zistíme, či daný model nezanedbáva dôležitú časť dynamiky procesu alebo na druhej strane, či už neaproximuje šum merania? Riešenie môže ponúknuť práve metóda garantovaného odhadu parametrov.
 
 Garantovaný odhad parametrov (GOP) je metóda, ktorá obchádza problém poznania rozdelenia náhodných veličín a namiesto toho predpokladá ľubovoľnú ale ohraničenú chybu merania. Výsledkom identifikácie pomocou GOP sú intervalové odhady parametrov modelu, ktoré zabezpečia, že nameraný výstup procesu sa bude nachádzať v rozmedzí stanovenej chyby merania \cite{paulen:gpe:2017}. Demonštrujme si fungovanie tejto metódy na nasledujúcom príklade.
 
 \section{Grafická metóda GOP}
-Predstavme si, že sme získali vstupné $ u $ a výstupné $ y $ údaje z procesu, ktoré v tomto prípade budú predstavovať konštantnú funkciu, tak ako to je zobrazené na Obr. \ref{gpe_ex1_data}. Vieme, že senzor má stanovenú chybu merania $ e $. Štruktúru modelu procesu, z ktorého sme získali údaje, nepoznáme a preto sa rozhodneme, že budeme tieto údaje aproximovať lineárnym modelom
+% RP: Ja by som toto skor nazval "Graficka ilustracia GOP"
+Predstavme si, že sme získali vstupné $ u $ a výstupné $ y $ údaje z procesu, ktoré v tomto prípade budú predstavovať konštantnú funkciu, tak ako to je zobrazené na Obr. \ref{gpe_ex1_data}. Vieme, že senzor 
+% RP: Skor "stanoveny rozsah chyby merania" ako "stanovenú chybu merania"
+má stanovenú chybu merania $ e $. Štruktúru modelu procesu, z ktorého sme získali údaje, nepoznáme a preto sa rozhodneme, že
+% RP: To je prilis silna skratka, ze ak nepozname model, tak si rovno zvolime linearny. Mohli by sme skor zvolit linearitu ako predpoklad alebo by sme sa mohli pozriet na data usudit pribliznu linearitu z dat (ak mame v datach z nejakeho ustaleneho stavu y=k*u a z dalsieho ustaleneho stavu dostaneme a*y = k*(a*u), tak je proces linearny)
+budeme tieto údaje aproximovať lineárnym modelom
 \begin{equation}
 	\hat{y}(u) = \theta_1 + \theta_2u.
 \end{equation}
+% RP: Podla akeho vzoru sa sklonouje model? "v duby" alebo "v strojy"? Je to vzor dub alebo v lokale ma vynimku "v modeli"
  Jediné neznáme v tomto modely sú parametre $ \theta_1 $ a $ \theta_2 $. Na ich identifikáciu využijeme grafickú metódu GOP a začneme tým, že si vyjadríme parameter $ \theta_2 $ ako funkciu nameraných údajov $ y, u $ a parametra $ \theta_1 $
 \begin{equation} \label{gpe:ex_lin_model}
 	\theta_2 = \frac{1}{u}y - \frac{1}{u}\theta_1,
 \end{equation}
 kde $ \theta_2 $ teraz predstavuje nezávislú premennú a $ \theta_1 $ závislú. Cieľom odhadu parametrov bude, aby ich vzájomná kombinácia viedla k výstupným údajom modelu $ \hat{y}(u) $, ktoré budú ležať v rozmedzí hraníc chyby merania senzora. Táto podmienka upravuje rovnicu \ref{gpe:ex_lin_model} do tvaru
-\begin{equation} 
+\begin{equation}
 	\theta_2 = \frac{1}{u}\left(y \pm e\right) - \frac{1}{u}\theta_1,
 \end{equation}
 ktorú môžeme formálne rozpísať na dve rovnice 
@@ -25,6 +31,7 @@ ktorú môžeme formálne rozpísať na dve rovnice
 		\theta_2^{(2)} =& \frac{1}{u}\left(y - e\right) - \frac{1}{u}\theta_1.
 	\end{split} 
 \end{equation}
+% RP: Tu treba jasne uviest Obr. 2.1. a vsetko na nom popisat. Citatel sa len tak sam z obrazka "nenaje". Nie je jasny ani priklad, ktory riesite, takze citatel nevie co by Vam vlastne malo vyjst.
 Tieto priamky vytyčujú oblasť vhodných kombinácií parametrov modelu $ \theta_1, \theta_2 $ ktorými môžeme opísať dané dáta a garantuje, že správne riešenie leží niekde vo vnútri tejto oblasti.
 
 \begin{figure}
@@ -75,6 +82,7 @@ Grafická metóda GOP je krásny ilustračný príklad toho ako táto metóda fu
 \begin{equation}
 	\begin{split}
 		\left[ \ubar{\theta}_i, \bar{\theta}_i \right] = \min_{\theta} / &\max_{\theta} \quad \theta_i, \quad\qquad \forall i = 1,2, \dots n_y, \\
+		% RP: Malo by tu byt jasne, ze \hat y je funkciou parametrov. Podobne by to vlastne mohlo byt uz aj v (2.1).
 		\text{s.t.}& \quad \ubar{e} \leq y - \hat{y} \leq \bar{e}	
 	\end{split}
 	\label{eq:gpe:general_form}
@@ -90,11 +98,16 @@ kde
 	\end{pmatrix}.
 \end{equation*}
 
-Takto hľadáme minimálnu $ \ubar{\theta}_i $ resp. maximálnu $ \bar{\theta}_i $ hodnotu všetkých $ n_y $ odhadovaných  parametrov, ktoré nám zaručia, že rozdiel výstupov nameraných $ y $ a modelových $ \hat{y} $ bude ležať v hraniciach chyby merania $ \langle \ubar{e}, \bar{e} \rangle $.
+Takto hľadáme minimálnu $ \ubar{\theta}_i $ resp. maximálnu $ \bar{\theta}_i $ hodnotu všetkých 
+% RP: n_y nie je prave intuitivne meno. Preco nie skor n_\theta?
+$ n_y $ odhadovaných  parametrov, ktoré nám zaručia, že rozdiel výstupov nameraných $ y $ a modelových $ \hat{y} $ bude ležať v hraniciach chyby merania $ \langle \ubar{e}, \bar{e} \rangle $.
 
 \section{Odhad rádu modelu}
-V predchádzajúcej časti sme ukázali ako získať intervalové hodnoty parametrov pre ľubovoľný počet odhadovaných parametrov. Čo sme však zamlčali bolo, že nie každá štruktúra modelu dokáže splniť podmienku optimalizačnej úlohy \ref{eq:gpe:general_form}. Preto, skôr ako začneme riešiť úlohu odhadu parametrov, potrebujeme odhadnúť vhodnú štruktúru resp. rád modelu. V tejto časti uvedieme ako riešiť problematiku odhadu minimálneho rádu modelu. Úlohu hľadania adekvátneho maximálneho rádu modelu objasníme v časti \aps{Verifikácia dátových modelov}.
+V predchádzajúcej časti sme ukázali ako získať intervalové hodnoty parametrov pre ľubovoľný počet odhadovaných parametrov. Čo sme však zamlčali bolo, že nie každá štruktúra modelu dokáže splniť podmienku optimalizačnej úlohy
+% RP: Na rovnice odporucam \eqref, nie \ref
+\ref{eq:gpe:general_form}. Preto, skôr ako začneme riešiť úlohu odhadu parametrov, potrebujeme odhadnúť vhodnú štruktúru resp. rád modelu. V tejto časti uvedieme ako riešiť problematiku odhadu minimálneho rádu modelu. Úlohu hľadania adekvátneho maximálneho rádu modelu objasníme v časti \aps{Verifikácia dátových modelov}.
 
+% RP: Z tohto odseku vobec nie je jasne, ako to vlastne funguje. Je to napisane akoby ny bola optimalizacna premenna, ktorej hodnotu nam vrati optimalizacia.
 Odhad minimálneho rádu modelu môžeme opäť sformulovať ako optimalizačný problém v tvare
 \begin{equation}
 	\begin{split}
@@ -106,7 +119,10 @@ Odhad minimálneho rádu modelu môžeme opäť sformulovať ako optimalizačný
 kde $ \theta^T = (\theta_1, \theta_2, \dots, \theta_{n_y}) $ je vektor odhadovaných parametrov a $ n_y $ predstavuje odhadovaný minimálny rád modelu. Takáto formulácia rieši problematiku prípustnosti, ktorej cieľom je nájsť najjednoduchšiu štruktúru dátového modelu, pri ľubovoľných hodnotách parametrov $ \theta $, ktorá neporušuje ohraničenia optimalizačného problému.  
 
 \section{Verifikácia dátových modelov}
-Úlohou verifikácie dátových modelov je overiť správnosť a posúdiť kvalitu daného dátového modelu spomedzi viacerých možností. Existuje množstvo metód a prístupov, ktoré sa snažia riešiť danú problematiku. My spomedzi nich spomenieme tzv. štandardné kritéria a zobrazenie Pareto front, ktoré sa buď používajú najčastejšie, alebo dokážu túto úlohu riešiť efektívnejším spôsobom.
+Úlohou verifikácie dátových modelov je overiť správnosť a posúdiť kvalitu daného dátového modelu spomedzi viacerých možností. Existuje množstvo metód a prístupov, ktoré sa snažia riešiť danú problematiku.
+% RP: Krkolomna veta.
+My spomedzi nich spomenieme tzv. štandardné kritéria a zobrazenie Pareto front, ktoré sa buď používajú najčastejšie, alebo dokážu túto úlohu riešiť efektívnejším spôsobom.
+% RP: "efektívnejším spôsobom" v porovnani s?
 
 \subsection{Štandardné kritéria}
 Pre štandardné kritéria je základným elementom výberu vhodného modelu zložitosť modelu. Tieto kritéria penalizujú pravdepodobnosť na základe počtu parametrov resp. rádu modelu a veľkosti vzorky. Akaike, v roku 1974, navrhol použitie Kullback–Leibler informačnej hodnoty na výber modelov, ktorým sa ustanovil vzťah medzi informovanosťou, pravdepodobnosťou a Kullback–Leibler maximom. Až neskôr, keď sa stanovil vzťah na odhad  Kullback–Leibler informačnej hodnoty, ju začali nazývať \aps{Akaike information criterion (AIC)} alebo Akaikeho informačné kritérium  \cite{emiliano:stand_crit:2014}. 
@@ -119,10 +135,13 @@ Toto kritérium je založené na koncepte informácie a poskytuje relatívnu mie
 \begin{equation}
 	\text{AIC} = 2k - 2\ln\left( \hat{L} \right),
 \end{equation}
-kde $ k $ reprezentuje počet parametrov modelu a $ \hat{L} $ je funkcia pravdepodobnosti, ktorá vyjadruje mieru správnosti regresie dát daným modelom. Jednou z takýchto funkcií je aj funkcia hustoty pravdepodobnosti normálneho rozdelenia, ktorej tvar je 
+kde $ k $ reprezentuje počet parametrov modelu a $ \hat{L} $ je funkcia pravdepodobnosti
+% RP: Tusim sa to po slovensky vola "pravdepodobnostna funkcia", nie "funkcia pravdepodobnosti"
+, ktorá vyjadruje mieru správnosti regresie dát daným modelom. Jednou z takýchto funkcií je aj funkcia hustoty pravdepodobnosti normálneho rozdelenia, ktorej tvar je 
 \begin{equation}
 	\hat{L} = \frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{1}{2}\left( \frac{x - \mu}{\sigma} \right)^2},
 \end{equation}
+% RP: Hodilo by sa sem namiesto x-\mu dat nieco podobne ako 1.14. Moholo by to byt (a v skutocnosti to tak aj predsa je) \prod_i^N \frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{1}{2}\left( \frac{y_i - \hat y_i}{\sigma} \right)^2}
 kde $ \mu $ je stredná hodnota rozdelenia, $ \sigma $ je jeho štandardná odchýlka a rozptyl sa označuje ako $ \sigma^2 $.
 
 \textbf{AICc}
@@ -131,11 +150,16 @@ Nevýhodou AIC je, že môže nepresne vyhodnotiť kvalitu modelu v prípade, ž
 \begin{equation}
 	\text{AICc} = \text{AIC} + \frac{2k^2 + 2k}{n - k - 1}, 
 \end{equation}
+% RP: V predchadzajucej kapitole ste pocet dat oznacili ako N, a tak by bolo celkom slusne to tak zachovat
 kde $ n $ predstavuje veľkosť vzorky dát. AICc by sa malo používať, ak pomer $ \frac{n}{k} $ je malý, napríklad $ \frac{n}{k} < 40$ \cite{kenneth:understanding_stand_crit:2004}. V opačnom prípade, keď je tento pomer dostatočne veľký, obe informačné kritéria by mali vracať podobné výsledky.
 
 \textbf{BIC}
 \newline
-Bayesove informačné kritérium slúži na hodnotenie kvality modelu, ktoré je založené na posteriornej pravdepodobnosti porovnávaných modelov. Vychádza z Bayesovej teorii a aproximácii Laplaceových integrálov, ktoré vyjadrujú skreslenie podpornej funkcie \cite{emiliano:stand_crit:2014} a definujú dané informačné kritérium ako
+% RP: Ja by som to skor prelozil ako "Bayesovske" nie "Bayesove"
+Bayesove informačné kritérium slúži na hodnotenie kvality modelu, ktoré je založené na posteriornej pravdepodobnosti porovnávaných modelov.
+% RP: "z ... teroii"?
+% RP: uff, netusim co je "skreslenie podpornej funkcie". Ak to neviete ani Vy, tak radsej 
+Vychádza z Bayesovej teorii a aproximácii Laplaceových integrálov, ktoré vyjadrujú skreslenie podpornej funkcie \cite{emiliano:stand_crit:2014} a definujú dané informačné kritérium ako
 \begin{equation}
 	\text{BIC} = \ln\left( n \right)k - 2\ln\left( \hat{L} \right).
 \end{equation}
@@ -145,7 +169,9 @@ Táto metóda je pomenovaná po talianskom inžinierovi, sociológovi, ekonómov
 
 Problematiku, ktorú riešil Pareto, bola viacúčelová optimalizácia. Pri tomto druhu optimalizácie, kedy rôzne účely (účelové funkcie) sú si odporujúce, najlepšie riešenie nájdeme ako kompromis, pretože nie je možné spraviť zlepšenie v jednom smere bez toho, aby nedošlo k degradácii ostatných. Súbor všetkých Pareto-optimálnych riešení sa nazýva Pareto front, pretože zvyčajne graficky tvorí zreteľný front bodov.
 
-Jednu ukážku Pareto frontu môžeme vidieť na Obr. \ref{fig:Pareto_example}. Modrou sú zobrazené možné optimálne riešenia a červená predstavuje utopický bod -- tento nie je možné nikdy dosiahnuť a predstavuje to najlepšie možné riešenie. Ako sa čítajú takéto grafy ? V prvom rade je nutné si uvedomiť, ako sú kvantifikované dané vlastnosti A,B. Povedzme, že väčšia hodnota znamená zhoršenie danej vlastnosti. Ako sa tak pohybujeme po horizontálnej osi, zlepšujeme vlastnosť A, ale pritom zhoršujeme vlastnosť B. Mohli by sme povedať, že bod, ktorý je najbližšie k utopickému bodu, bude predstavovať najlepší možný kompromis medzi oboma vlastnosťami. Takýto predpoklad je správny, ale veľa závisí od profilu frontu. Na Pareto front sa môžeme pozerať ešte inak. Rozdelme front na dve časti v bode, kde sa výraznejšie mení sklon frontu, napr. keď vlastnosť B dosahuje hodnotu 1. Do tohto bodu, každé výraznejšie zlepšenie vo vlastnosti A, predstavuje menšiu degradáciu vlastnosti B, čo je pre nás výhodnejšie. Avšak, od tohto bodu sa sklon frontu mení a ďalším zlepšovaním vlastnosti A, ktoré by bolo v tom prípade omnoho menšie, by sme výraznejšie zhoršovali vlastnosť B a to by bolo kontraproduktívne.
+Jednu ukážku Pareto frontu môžeme vidieť na Obr. \ref{fig:Pareto_example}. Modrou sú zobrazené možné optimálne riešenia a červená predstavuje utopický bod -- tento nie je možné nikdy dosiahnuť a predstavuje to najlepšie možné riešenie. Ako sa čítajú takéto grafy ? V prvom rade je nutné si uvedomiť, ako sú kvantifikované dané vlastnosti A, B. Povedzme, že väčšia hodnota znamená zhoršenie danej vlastnosti. Ako sa tak pohybujeme po horizontálnej osi, zlepšujeme vlastnosť A, ale pritom zhoršujeme vlastnosť B. Mohli by sme povedať, že bod, ktorý je najbližšie k utopickému bodu, bude predstavovať najlepší možný kompromis medzi oboma vlastnosťami. Takýto predpoklad je správny, ale veľa závisí od profilu frontu. Na Pareto front sa môžeme pozerať ešte inak. 
+% RP: "Rozdeľme"
+Rozdelme front na dve časti v bode, kde sa výraznejšie mení sklon frontu, napr. keď vlastnosť B dosahuje hodnotu 1. Do tohto bodu, každé výraznejšie zlepšenie vo vlastnosti A, predstavuje menšiu degradáciu vlastnosti B, čo je pre nás výhodnejšie. Avšak, od tohto bodu sa sklon frontu mení a ďalším zlepšovaním vlastnosti A, ktoré by bolo v tom prípade omnoho menšie, by sme výraznejšie zhoršovali vlastnosť B a to by bolo kontraproduktívne.
 
 \begin{figure}
 	\centering
@@ -154,4 +180,6 @@ Jednu ukážku Pareto frontu môžeme vidieť na Obr. \ref{fig:Pareto_example}. 
 	\label{fig:Pareto_example}
 \end{figure}
 
-Pareto front môžeme využiť aj pri verifikácii kvality dátových modelov. Stačí ak zobrazíme niektoré skúmané vlastnosti vybraného súboru modelov, napríklad presnosť a nadhodnotenie (v zmysle zložitosti modelu, \textit{angl. \aps{overestimation}}), ktoré sa snažíme zlepšiť, optimalizovať. A na základe predchádzajúcej úvahy vyberieme taký model, ktorý bude predstavovať ten najlepší možný kompromis medzi pozorovanou presnosťou modelu a nadhodnotením.
+Pareto front môžeme využiť aj pri verifikácii kvality dátových modelov. Stačí ak zobrazíme niektoré skúmané vlastnosti vybraného súboru modelov, napríklad presnosť a
+% RP: Toto nadhodnotenie je tu prilis abstratkne lebo nie je jasne, co presne to znamena. Su dve cesty...bud do detailu vysvetlit overestimation prave tu (toto by som ale nerobil) alebo nadhodnotenie nepomenovavat a skor ho nazvat opisne (nieco ako predikcna kvalita modelu). Mohlo by to byt trenovacia vs. predikcna kvalita modelu.
+nadhodnotenie (v zmysle zložitosti modelu, \textit{angl. \aps{overestimation}}), ktoré sa snažíme zlepšiť, optimalizovať. A na základe predchádzajúcej úvahy vyberieme taký model, ktorý bude predstavovať ten najlepší možný kompromis medzi pozorovanou presnosťou modelu a nadhodnotením.

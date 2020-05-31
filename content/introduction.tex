@@ -1,15 +1,32 @@
 \chapter*{Úvod}
 \addcontentsline{toc}{chapter}{Úvod}
-V tomto momente, ako čítate tento text, prebieha okolo nás množstvo procesov, ktoré zabezpečujú fungovanie dnešnej spoločnosti bez toho, aby si to človek vôbec uvedomoval a ťažko povedať, či si ešte dokážeme predstaviť život bez týchto vymožeností. O čom je reč ? Distribúcia elektrickej energie, pitnej vody, plynu, separácia odpadu či čistenie odpadových vôd alebo každodenný prísun potravín, liečiv, pohonných hmôt, oblečenia atď. Asi je zrejmé, že takto by sme mohli pokračovať ešte veľmi dlho. Čo sa však snažíme ozrejmiť je, že väčšina týchto procesov je nejakým spôsobom automatizovaná, čo nám umožňuje vykonávať daný proces efektívne, kvalitne a hlavne bezpečne. 
+% RP: Pridal by som aspon po jednom odkaze na litaraturu do prvych styroch odsekov.
 
-Základným kameňom väčšiny pokročilejších metód automatizácie je matematický model zariadenia. V princípe existujú dva prístupy k matematickému modelovaniu. Prvý prístup je založený na fyzikálnych zákonoch, ktorý vedie k tak zvaným mechanickým modelom. Problémom takéhoto modelovania je, že s rastúcimi požiadavkami na kvantitu, kvalitu, bezpečnosť alebo efektivitu, rastie aj zložitosť priemyselných procesov -- jednak štruktúra zariadenia a jednak stupeň automatizácie, čo vedie ku komplikáciám. Nehovoriac o tom, že takýto prístup je časovo a aj finančne veľmi náročný. Druhý prístup vychádza z analýzy a identifikácie veľkého množstva nameraných procesných údajov, čo vedie k dátovým modelom. Dátové modely sú jednoduchšie na konštrukciu, avšak môžu so sebou prinášať neistoty v podobe nesprávnej štruktúry modelu alebo parametrov. Tieto neistoty sú najčastejšie spôsobené vplyvom chyby merania.
+% RP: Tato veta je dlha aj na slovencinu.
+V tomto momente, ako práve čítate tento text, prebieha okolo nás množstvo procesov, ktoré zabezpečujú fungovanie dnešnej spoločnosti bez toho, aby si to človek vôbec uvedomoval a ťažko povedať, či si ešte dokážeme predstaviť život bez týchto vymožeností. O čom je reč? Distribúcia elektrickej energie, pitnej vody, plynu, separácia 
+odpadu či čistenie odpadových vôd alebo každodenný prísun potravín,
+% RP: A kde je varenie piva? :) Just joking.
+liečiv, pohonných hmôt, oblečenia atď. Asi je zrejmé, že takto by sme mohli pokračovať ešte veľmi dlho. Čo sa však snažíme ozrejmiť je, že väčšina týchto procesov je nejakým spôsobom automatizovaná, čo nám umožňuje vykonávať daný proces efektívne, kvalitne a hlavne bezpečne. 
+
+Základným kameňom väčšiny pokročilejších metód automatizácie je matematický model zariadenia. V princípe existujú dva prístupy k matematickému modelovaniu. Prvý prístup je založený na fyzikálnych zákonoch, ktorý vedie k tak zvaným mechanickým modelom. Problémom takéhoto modelovania je, že s rastúcimi požiadavkami na kvantitu, kvalitu, bezpečnosť alebo efektivitu, rastie aj zložitosť priemyselných procesov
+% RP: Tu by mala byt presne ta pomlcka (vid. komenty k angl. abstraktu) ---
+-- jednak štruktúra zariadenia a jednak stupeň automatizácie, 
+% RP: ...a tu by mal byt namiesto ciarky tiez
+čo vedie ku komplikáciám. Nehovoriac o tom, že takýto prístup je časovo a aj finančne veľmi náročný. Druhý prístup vychádza z analýzy a identifikácie veľkého množstva nameraných procesných údajov, čo vedie k dátovým modelom. Dátové modely sú jednoduchšie na konštrukciu, avšak môžu so sebou prinášať neistoty v podobe nesprávnej štruktúry modelu alebo parametrov. Tieto neistoty sú najčastejšie spôsobené vplyvom chyby merania.
 
 Existuje viacero metód, ktoré dokážu spracovať zašumený signál, a každá z nich so sebou nesie určité nevýhody. Napríklad metóda najmenších štvorcov predpokladá, že šum merania má normálne rozdelenie a ak tento predpoklad nie je dodržaný, môže viesť k nesprávnym výsledkom.
 
 Garantovaný odhad parametrov (GOP) je metóda, ktorá obchádza problém poznania rozdelenia náhodných veličín a namiesto toho predpokladá ľubovoľnú ale ohraničenú chyba merania. Výsledkom identifikácie pomocou GOP sú intervalové odhady parametrov modelu, ktoré zabezpečia, že nameraný výstup procesu sa bude nachádzať v rozmedzí stanovenej chyby merania.  
 
-Tu sa naskytá otázka, či by nebolo možné opísať komplikované zariadenie jednoduchším mechanickým modelom a vzniknuté rozdiely od skutočného zariadenia doplniť dátovými modelmi. Ako bolo ukázané vo viacerých vedeckých publikáciach, takéto hybridné modely je možné skonštruovať a využiť ich v rôznych oblastiach automatizácie \cite{hamilton:hybrid_modeling:2017}, \cite{hernandez:economics_opt_w_mismatch:2019}. Výhodou hybridných modelov je väčšia robustnosť a krátkodobá predikcia, najmä v situáciách, kde je veľká neistota v parametroch modelu \cite{hamilton:hybrid_modeling:2017}.
+% RP: skor "ponuka sa otazka"
+Tu sa naskytá otázka, či by nebolo možné opísať komplikované zariadenie jednoduchším mechanickým modelom a vzniknuté rozdiely od skutočného zariadenia doplniť dátovými modelmi. Ako bolo ukázané vo viacerých vedeckých publikáciach, takéto hybridné modely je možné skonštruovať a využiť ich v rôznych oblastiach automatizácie \cite{hamilton:hybrid_modeling:2017, hernandez:economics_opt_w_mismatch:2019}.
+% RP: Tejto vete nerozumiem. V akom zmysle "robustne"? Co znamena "kratkodoba predikcia"?
+Výhodou hybridných modelov je väčšia robustnosť a krátkodobá predikcia, najmä v situáciách, kde je veľká neistota v parametroch modelu \cite{hamilton:hybrid_modeling:2017}.
 
 Hlavným predmetom tejto práce je ukázať ako možno skonštruovať hybridný model využitím metódy garantovaného odhadu parametrov a aplikovať ho pri ekonomickej optimalizácii dynamického procesu prietokového biochemického reaktora.
+% RP: Este by som doplnil, kde/ako sa pouzije garantovany odhad.
 
 Biochemické reaktory sa považujú za dôležitú súčasť chemického priemyslu. Široká škála dôležitých zlúčenín ako farmaceutické produkty, rôzne polyméry alebo produkty potravinárskeho priemyslu sa vyrábajú pomocou určitého fermentačného média (rôzne baktérie, kvasinky, vláknité huby alebo enzýmy) za prísne stanovených podmienok v biochemickom reaktore \cite{srinivasan:chemostat_opt:2003}. Na druhej strane, biochemické reaktory vykazujú širokú škálu dynamického správania a ponúkajú veľa problémov s modelovaním v dôsledku prítomnosti živých organizmov, ktorých rýchlosť rastu je opísaná komplexnými kinetickými výrazmi \cite{psichogios:hybrid_process_model:1992}.
+% RP: Z tohto odesku dajak nic nevyplyva...clovek by tu ocakaval ze poviet aspon, ze biochemicke reaktory teda predstavuju zaujimavu oblast na studium
+
+% RP: Mali by ste este pridat aj to ako je praca rozclenena a co kde clovek najde.

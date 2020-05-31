@@ -69,6 +69,7 @@ pre všetky $ i = 1,2, \dots, n_a+n_b $ a $ \Theta $ predstavuje vektor minimál
 		\ubar{b}_{n_b} & \bar{b}_{n_b}\\	
 	\end{pmatrix}.
 \end{equation*}
+% RP: Tu to vyznie akoby ste to "zahravali do outu". Ja by som tam oddal, ze nieco ako pre rozumne rady modelov, tato optimalizacia nemusi byt nutne narocna.
 Zložitosť týchto optimalizačných úloh je pravdepodobne očividná. Okrem toho, že nutne musíme v každom nameranom bode odhadovať hodnotu $ \hat{y}(t) $, čo nám pridáva na počte odhadovaných parametrov, tak k nelineárnej optimalizácii potrebujeme pristupovať špeciálne, pretože jej výsledky nemusia konvergovať k spoľahlivému riešeniu.
 
 \section{Príklady identifikácie}
@@ -79,6 +80,7 @@ V tejto časti si na konkrétnom príklade ukážeme identifikáciu FIR aj ARX m
 Tak ako všetky reálne dáta, výstupné údaje sú zaťažené šumom, a presnosť merania senzora je $ e = \pm 0.8 $. 
 
 \begin{figure}
+    % RP: Musim Vas pochvalit za obrazky. Prvotriedna kvalita.
 	\centering
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
@@ -94,10 +96,12 @@ Tak ako všetky reálne dáta, výstupné údaje sú zaťažené šumom, a presn
 	\label{fig:gpe_tf_ex_data}
 \end{figure}
 
+% RP: Tento odsek je fajn, ale myslim, ze podobny by mal aj v niektorej z predchadzajucich kapitol. Problem je, ze to nie uplne dobre mixovat priklad a teoriu...inak povedane, nemalo by sa stat, ze sa citatel dozvie ako nieco urobit s kapitoly, ktora sa vola "Priklady identifikiacie"
 Postup identifikácie oboch modelov metódou garantovaného odhadu parametrov je rovnaký. Najskôr odhadneme najjednoduchší model, ktorý vyhovuje podmienke GOP. V prípade FIR modelu môžeme túto problematiku vyjadriť rovnicou \ref{eq:gpe_fir_min_rad} a pre ARX model \ref{eq:gpe_arx_min_rad}. V ďalšom kroku určíme intervalový odhad parametrov danej štruktúry modelu. Riešenie nájdeme podľa rovnice \ref{eq:gpe_fir_param_est}, v prípade FIR alebo podľa \ref{eq:gpe_arx_param_est}, ak sa bude jednať o ARX model.
 
 \begin{figure}
 	\centering
+	% RP: Pridal by som do obrazka legendu. Vyrazne to zlepsi jeho prehladnost. (Toto aj o vsetkych dalsich obrazkoch s viacerymi ciarami)
 	\includegraphics[width=0.7\linewidth]{images/gpe_tf_ex_FIRident}
 	\caption{Výsledok identifikácie FIR modelu ($ n_b = 11 $) -- minimálna realizácia (červená), maximálna realizácia (modrá), namerané údaje s danou chybou merania (čierna).}
 	\label{fig:gpe_tf_ex_FIR}
@@ -130,3 +134,5 @@ Výstup identifikácie ARX modelu môžeme vidieť na Obr. \ref{fig:gpe_tf_ex_AR
 \end{figure}
 
 Rozdiel v zložitosti modelov je očividný, avšak v oboch prípadoch sme získali oblasť riešení, ktorá nám garantuje, že skutočné riešenie leží niekde vo vnútri. Táto oblasť je definovaná kombináciou minimálnych resp. maximálnych parametrov, ktoré nám zabezpečia spodné (minimálna realizácia) resp. horné (maximálna realizácia) ohraničenie. Treba taktiež spomenúť, že nie sme odkázaný iba na intervalový odhad. Akonáhle získame informáciu o štruktúre modelu, môžeme využiť napríklad metódu najmenších štvorcov (MNŠ) na identifikáciu neznámych parametrov. 
+
+% RP: Trochu tu chybaju Pareto fronty. Clovek by to cakal potom co ste ich tak zaujimavo opisali.
