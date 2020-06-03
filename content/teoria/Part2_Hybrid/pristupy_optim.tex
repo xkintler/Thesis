@@ -51,7 +51,7 @@ Hodnota modifikátora v $ k $-tom kroku je určená na základe váhovania dvoch
 	\lambda_k = c\lambda_{k-1} + \left(1 - c\right)\Delta_{k},
 \end{equation}
 kde $ c $ je váhový koeficient, ktorý môže nadobúdať hodnoty $ c \in \lbrace 0; 1 \rbrace $ v závislosti od toho, či chceme aby sa modifikátor menil viac alebo menej s pribúdajúcimi dátami.
-% RP: skor "hodnotu premennej" ako "Samotnú premennú"
+
 Hodnotu premennej $ \Delta_k $ je náročné určiť správne, pretože obsahuje gradient účelovej funkcie reálneho zariadenia $ \nabla_P\ell_e(\bar{x},\bar{u}) $, ktorý my nemáme k dispozícii a preto je nutné ho odhadnúť napr. metódou konečných rozdielov
 \begin{equation}
 	\nabla_P\ell_{e,k}(\bar{x},\bar{u}) = \frac{\ell_{e,k}(\bar{x},\bar{u}) - \ell_{e,k-1}(\bar{x},\bar{u})}{\bar{u}_k - \bar{u}_{k-1}}.
