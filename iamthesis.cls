@@ -233,10 +233,8 @@ template},urlcolor=blue]{hyperref}
 	\begin{small} 
 		\if\slovak1
 			\begin{tabular}{ll}
-				Študijný program:     & Riadenie Procesov    
-				\\
-					Študijný odbor:         & 5.2.14. 
-					Automatizácia \\
+				Študijný program:     & automatizácia a informatizácia v chémii a potravinárstve \\
+					Študijný odbor:         & kybernetika \\
 					Školiace pracovisko:        &\thesisinst   
 					\\
 				Vedúci práce:   &\thesissupervisor \\
