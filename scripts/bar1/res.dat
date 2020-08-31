@@ -1,0 +1,177 @@
+===========================================================================
+ BARON version 18.8.23. Built: WIN-64 Thu Aug 23 11:45:16 EDT 2018
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you use this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP: ILOG CPLEX                                      
+ For NLP: IPOPT, FILTERSD, FILTERSQP
+===========================================================================
+    The options used in solving the problem are as follows:
+       maxtime        =  0.1000E+04
+       maxiter        =      -1
+       numsol         =       1
+       firstfeas      =       0
+       cutoff         =  0.1000E+52
+       epsa           =  0.1000E-05
+       epsr           =  0.1000E-03
+       deltaterm      =       0
+       deltaa         =  0.1000E+52
+       deltar         =  0.1000E+01
+       deltat         = -0.1000E+03
+       boxtol         =  0.1000E-07
+       isoltol        =  0.1000E-03
+       absconfeastol  =  0.1000E-04
+       relconfeastol  =  0.0000E+00
+       absintfeastol  =  0.1000E-04
+       relintfeastol  =  0.0000E+00
+       results        =       1
+       summary        =       1
+       times          =       1
+       prtimefreq     =  0.3000E+02
+       prfreq         = 1000000
+       prlevel        =       1
+       numprint       =      -1
+       numprintdual   =      -1
+       lpsol          =       3
+       nlpsol         =      -1
+       allowminos     =       0
+       allowsnopt     =       0
+       allowexternal  =       0
+       allowipopt     =       1
+       allowfiltersd  =       1
+       allowfiltersqp =       1
+       dolocal        =       1
+       numloc         =      -2
+       locres         =       0
+       pdo            =      -2
+       brvarstra      =       0
+       brptstra       =       0
+       nodesel        =       0
+       compiis        =       0
+       iisint         =       1
+       iisorder       =      -1
+       threads        =       1
+===========================================================================
+ Doing local search
+ >>> Preprocessing found feasible solution
+ >>> Objective value is:          0.47216196833232970675454E-004
+ >>> Corresponding solution vector is:
+ >>> Variable no.              Value
+ >>>       1            0.10333211693541068110225     
+ >>>       2            0.18131317416960557320493     
+ >>>       3            -.42666788306458930390974     
+ >>>       4            0.75833029233852655703885     
+ 
+ >>> No dual information is available
+ >>> Variable no.              Marginal
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ >>>       4             0.0000000000000000000000     
+ >>> Constraint no.            Price
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ 
+ Solving bounding LP
+ >>> Preprocessing found feasible solution
+ >>> Objective value is:           0.0000000000000000000000     
+ >>> Corresponding solution vector is:
+ >>> Variable no.              Value
+ >>>       1             0.0000000000000000000000     
+ >>>       2            0.28089999999999998303579     
+ >>>       3            -.53000000000000002664535     
+ >>>       4            0.50000000000000000000000     
+ 
+ >>> No dual information is available
+ >>> Variable no.              Marginal
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ >>>       4             0.0000000000000000000000     
+ >>> Constraint no.            Price
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ 
+ Starting multi-start local search
+ >>> Preprocessing found feasible solution
+ >>> Objective value is:          -26.959644287974533938268     
+ >>> Corresponding solution vector is:
+ >>> Variable no.              Value
+ >>>       1             288.94509781404104842295     
+ >>>       2             77458.290162830628105439     
+ >>>       3             288.41509781404107570779     
+ >>>       4             722.86274453510327475669     
+ 
+ >>> Corresponding dual solution vector is:
+ >>> Variable no.              Marginal
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ >>>       4             0.0000000000000000000000     
+ >>> Constraint no.            Price
+ >>>       1            0.86522613953364299458661E-004
+ >>>       2            0.16661675725148730482089E-002
+ >>>       3            -.37295572558340490953999E-001
+ 
+ Done with local search
+===========================================================================
+===========================================================================
+ User did not provide appropriate variable bounds. 
+ Some model expressions are unbounded.             
+ We may not be able to guarantee globality.        
+ Number of missing variable or expression bounds =      9
+ Number of variable or expression bounds autoset =      8
+===========================================================================
+
+ >>> Better Solution Found at Iteration           1
+ >>> Objective value is:          -27.028539595937278505744     
+ >>> Corresponding solution vector is:
+ >>> Variable no.              Value
+ >>>       1             7071.2888589520225650631     
+ >>>       2             46566845.049922116100788     
+ >>>       3             7070.7588589520228197216     
+ >>>       4             17678.722147380056412658     
+ 
+ >>> No dual information is available
+ >>> Variable no.              Marginal
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ >>>       4             0.0000000000000000000000     
+ >>> Constraint no.            Price
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ 
+
+ >>> Better Solution Found at Iteration           1
+ >>> Objective value is:          -27.029399744516979353648     
+ >>> Corresponding solution vector is:
+ >>> Variable no.              Value
+ >>>       1             9999.9999999999981810106     
+ >>>       2             93132257.423799991607666     
+ >>>       3             9999.4699999999975261744     
+ >>>       4             25000.499999999996362021     
+ 
+ >>> No dual information is available
+ >>> Variable no.              Marginal
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ >>>       4             0.0000000000000000000000     
+ >>> Constraint no.            Price
+ >>>       1             0.0000000000000000000000     
+ >>>       2             0.0000000000000000000000     
+ >>>       3             0.0000000000000000000000     
+ 

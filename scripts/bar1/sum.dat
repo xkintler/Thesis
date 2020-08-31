@@ -1,0 +1,108 @@
+===========================================================================
+ BARON version 18.8.23. Built: WIN-64 Thu Aug 23 11:45:16 EDT 2018
+
+ BARON is a product of The Optimization Firm.
+ For information on BARON, see https://minlp.com/about-baron
+
+ If you use this software, please cite publications from
+ https://minlp.com/baron-publications, such as: 
+
+ Khajavirad, A. and N. V. Sahinidis,
+ A hybrid LP/NLP paradigm for global optimization relaxations,
+ Mathematical Programming Computation, 10, 383-421, 2018.
+===========================================================================
+ This BARON run may utilize the following subsolver(s)
+ For LP/MIP: ILOG CPLEX                                      
+ For NLP: IPOPT, FILTERSD, FILTERSQP
+===========================================================================
+    The options used in solving the problem are as follows:
+       maxtime        =  0.1000E+04
+       maxiter        =      -1
+       numsol         =       1
+       firstfeas      =       0
+       cutoff         =  0.1000E+52
+       epsa           =  0.1000E-05
+       epsr           =  0.1000E-03
+       deltaterm      =       0
+       deltaa         =  0.1000E+52
+       deltar         =  0.1000E+01
+       deltat         = -0.1000E+03
+       boxtol         =  0.1000E-07
+       isoltol        =  0.1000E-03
+       absconfeastol  =  0.1000E-04
+       relconfeastol  =  0.0000E+00
+       absintfeastol  =  0.1000E-04
+       relintfeastol  =  0.0000E+00
+       results        =       1
+       summary        =       1
+       times          =       1
+       prtimefreq     =  0.3000E+02
+       prfreq         = 1000000
+       prlevel        =       1
+       numprint       =      -1
+       numprintdual   =      -1
+       lpsol          =       3
+       nlpsol         =      -1
+       allowminos     =       0
+       allowsnopt     =       0
+       allowexternal  =       0
+       allowipopt     =       1
+       allowfiltersd  =       1
+       allowfiltersqp =       1
+       dolocal        =       1
+       numloc         =      -2
+       locres         =       0
+       pdo            =      -2
+       brvarstra      =       0
+       brptstra       =       0
+       nodesel        =       0
+       compiis        =       0
+       iisint         =       1
+       iisorder       =      -1
+       threads        =       1
+===========================================================================
+ Doing local search
+ Preprocessing found feasible solution with value 0.472161968332E-004
+ Solving bounding LP
+ Preprocessing found feasible solution with value  0.00000000000     
+ Starting multi-start local search
+ Preprocessing found feasible solution with value -26.9596442880     
+ Done with local search
+===========================================================================
+  Iteration    Open nodes         Time (s)    Lower bound      Upper bound
+ Missing bound for variable x4 in relation x4^0.5
+ Missing bound for variable x2 in relation x2^-1
+ Missing bound for variable x1 in relation x1^2
+ Missing bound for intermediate expression bar_var7 in bilinear or rational composition
+ Missing bound for intermediate expression bar_var5 in bilinear or rational composition
+ Missing bound for intermediate expression bar_var5 in bilinear or rational composition
+ Missing bound for intermediate expression bar_var1 in bilinear or rational composition
+ Detail of the intermediate expression:
+ x1 ^ 2
+ Missing bound for intermediate expression bar_var4 in bilinear or rational composition
+ Missing bound for intermediate expression bar_var4 in bilinear or rational composition
+===========================================================================
+ User did not provide appropriate variable bounds. 
+ Some model expressions are unbounded.             
+ We may not be able to guarantee globality.        
+ Number of missing variable or expression bounds =      9
+ Number of variable or expression bounds autoset =      8
+===========================================================================
+*         1             1             2.05   -0.241026E+09     -27.0285    
+*         1+            1             2.05   -0.241026E+09     -27.0294    
+          1             1             2.05   -0.240688E+09     -27.0294    
+      57215         11444            31.86    -32.6964         -27.0294    
+      87791         16320            61.73    -32.6939         -27.0294    
+     111365         21026            91.64    -32.6928         -27.0294    
+     132517         24925           121.53    -32.6909         -27.0294    
+     151023         27720           151.50    -32.6889         -27.0294    
+     167360         31691           181.38    -32.6881         -27.0294    
+     182825         34392           211.23    -32.6869         -27.0294    
+     195829         37679           241.02    -32.6861         -27.0294    
+     208811         40116           270.92    -32.6848         -27.0294    
+     221466         42641           300.77    -32.6841         -27.0294    
+     233762         45137           330.67    -32.6834         -27.0294    
+     244932         47691           360.56    -32.6828         -27.0294    
+     255846         49833           390.41    -32.6813         -27.0294    
+     266388         52207           420.30    -32.6786         -27.0294    
+     276017         56252           450.12    -32.6783         -27.0294    
